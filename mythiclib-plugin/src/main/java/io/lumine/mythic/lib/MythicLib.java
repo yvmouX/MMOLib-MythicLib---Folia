@@ -364,7 +364,7 @@ public class MythicLib extends MMOPlugin {
         // Close open inventory
         UtilityMethods.closeOpenViewsOfType(PluginInventory.class);
 
-        glowModule.disable();
+        if (glowModule != null) glowModule.disable();
     }
 
     public static MythicLib inst() {
