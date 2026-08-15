@@ -1,6 +1,8 @@
 package io.lumine.mythic.lib.util;
 
 
+
+import io.lumine.mythic.lib.MythicLib;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +46,7 @@ public class BukkitFuture<T> {
     @NotNull
     public BukkitFuture<Void> thenAsync(Consumer<T> consumer) {
         return new BukkitFuture<>(plugin, wrapped.thenAccept(t -> {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            MythicLib.getScheduler().runAsync(plugin, () -> {
                 try {
                     consumer.accept(t);
                 } catch (Exception e) {
@@ -60,7 +62,7 @@ public class BukkitFuture<T> {
 
     public static <T> BukkitFuture<T> async(@NotNull Plugin plugin, @NotNull Supplier<T> supplier) {
         final BukkitFuture<T> future = new BukkitFuture<>(plugin);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        MythicLib.getScheduler().runAsync(plugin, () -> {
             try {
                 T result = supplier.get();
                 future.complete(result);

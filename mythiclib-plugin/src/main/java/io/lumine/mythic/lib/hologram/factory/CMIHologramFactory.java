@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.hologram.factory;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import com.Zrips.CMI.CMI;
 import io.lumine.mythic.lib.hologram.Hologram;
 import io.lumine.mythic.lib.hologram.HologramFactory;
@@ -30,7 +32,7 @@ public class CMIHologramFactory implements HologramFactory {
         CMI.getInstance().getHologramManager().addHologram(hologram);
         hologram.update();
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(MythicLib.plugin, () -> CMI.getInstance().getHologramManager().removeHolo(hologram), 20);
+        MythicLib.getScheduler().runLater(MythicLib.plugin, () -> CMI.getInstance().getHologramManager().removeHolo(hologram), 20);
     }*/
 
     @NotNull

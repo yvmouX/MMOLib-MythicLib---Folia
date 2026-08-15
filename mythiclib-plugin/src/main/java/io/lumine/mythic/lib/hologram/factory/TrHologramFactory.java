@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.hologram.factory;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.hologram.Hologram;
 import io.lumine.mythic.lib.hologram.HologramFactory;
 import io.lumine.mythic.lib.util.IndicatorConfig;
@@ -23,7 +25,7 @@ public class TrHologramFactory implements HologramFactory {
         Hologram hologram = TrHologramAPI.builder(loc)
                 .append(format)
                 .build();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(MythicLib.plugin, hologram::destroy, 20L);
+        MythicLib.getScheduler().runLater(MythicLib.plugin, hologram::destroy, 20L);
     }*/
 
     @NotNull

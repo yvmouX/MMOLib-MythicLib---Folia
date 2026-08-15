@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.hologram.factory;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import com.sainttx.holograms.HologramPlugin;
 import com.sainttx.holograms.api.HologramManager;
 import com.sainttx.holograms.api.line.TextLine;
@@ -26,7 +28,7 @@ public class HologramsHologramFactory implements HologramFactory {
 		Hologram hologram = new Hologram("MMOItems_" + UUID.randomUUID().toString(), loc);
 		hologramManager.addActiveHologram(hologram);
 		hologram.addLine(new TextLine(hologram, message));
-		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> hologramManager.deleteHologram(hologram), 20);
+		MythicLib.getScheduler().runLater(MMOItems.plugin, () -> hologramManager.deleteHologram(hologram), 20);
 	} */
 
     @NotNull

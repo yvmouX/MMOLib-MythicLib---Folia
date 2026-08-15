@@ -23,7 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +44,7 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> {
     public void whenCast(VectorSkillResult result, SkillMetadata skillMeta) {
         final Player caster = skillMeta.getCaster().getPlayer();
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 3, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 3, handler -> new UniversalRunnable() {
             double n = 0;
 
             public void run() {
@@ -79,12 +79,12 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> {
             this.damage = damage;
             this.effectDuration = effectDuration;
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(bullet, 0, 1);
         }
 
         @Override
-        protected @Nullable BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected @Nullable UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 double ti = 0;
 
                 public void run() {
@@ -111,9 +111,11 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> {
             final LivingEntity entity = (LivingEntity) event.getEntity();
             event.setDamage(damage);
 
-            new BukkitRunnable() {
+            new Runnable() {
                 final Location loc = entity.getLocation();
                 double y = 0;
+
+                final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(entity, this, 0, null, 1);
 
                 public void run() {
 
@@ -130,9 +132,9 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> {
                             loc.getWorld().spawnParticle(VParticle.REDSTONE.get(), loc.clone().add(Math.cos(xz), y, Math.sin(xz)), 1, new Particle.DustOptions(Color.MAROON, 1));
                         }
                     }
-                    if (y >= 2) cancel();
+                    if (y >= 2) task.cancel();
                 }
-            }.runTaskTimer(MythicLib.plugin, 0, 1);
+            };
         }
     }
 }

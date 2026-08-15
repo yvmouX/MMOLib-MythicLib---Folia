@@ -14,7 +14,7 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 @BuiltinSkillHandler(mods = {"duration", "amplifier"})
@@ -40,12 +40,14 @@ public class Slow extends SkillHandler<TargetSkillResult> {
     }
 
     private void playParticleEffect(Location loc) {
-        new BukkitRunnable() {
+        new Runnable() {
             double ti = 0;
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(loc, this, 0, 1);
 
             public void run() {
                 ti += Math.PI / 10;
-                if (ti >= Math.PI * 2) cancel();
+                if (ti >= Math.PI * 2) task.cancel();
 
                 for (double j = 0; j < Math.PI * 2; j += Math.PI)
                     for (double r = 0; r < .7; r += .1)
@@ -54,6 +56,6 @@ public class Slow extends SkillHandler<TargetSkillResult> {
                                 1, new Particle.DustOptions(Color.WHITE, 1));
 
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 }

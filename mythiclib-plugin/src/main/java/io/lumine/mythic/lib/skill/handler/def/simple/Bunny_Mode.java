@@ -15,7 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,12 +50,12 @@ public class Bunny_Mode extends SkillHandler<SimpleSkillResult> {
             this.jumpStrength = skillMeta.getParameter("jump-force");
             this.radialVelocity = skillMeta.getParameter("speed");
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(caster, 0, 1);
         }
 
         @Override
-        protected BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 int j = 0;
                 long lastJump = 0;
 

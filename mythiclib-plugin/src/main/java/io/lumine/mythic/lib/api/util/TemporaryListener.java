@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +44,7 @@ public abstract class TemporaryListener implements Listener {
      * for instance. This is purely optional.
      */
     @Nullable
-    private BukkitRunnable runnable;
+    private UniversalRunnable runnable;
 
     @Deprecated
     public TemporaryListener(@NotNull HandlerList... handlerLists) {
@@ -69,15 +69,15 @@ public abstract class TemporaryListener implements Listener {
      * @param duration Delay before unregistration
      */
     public void close(long duration) {
-        Bukkit.getScheduler().runTaskLater(MythicLib.plugin, (Runnable) this::close, duration);
+        MythicLib.getScheduler().runLater(MythicLib.plugin, (Runnable) this::close, duration);
     }
 
     @NotNull
-    public BukkitRunnable getRunnable() {
+    public UniversalRunnable getRunnable() {
         return Objects.requireNonNull(runnable, "No runnable registered");
     }
 
-    public void registerRunnable(@NotNull BukkitRunnable runnable, Consumer<BukkitRunnable> action) {
+    public void registerRunnable(@NotNull UniversalRunnable runnable, Consumer<UniversalRunnable> action) {
         Validate.notNull(runnable, "Runnable cannot be null");
         Validate.isTrue(this.runnable == null, "Runnable already registered");
 

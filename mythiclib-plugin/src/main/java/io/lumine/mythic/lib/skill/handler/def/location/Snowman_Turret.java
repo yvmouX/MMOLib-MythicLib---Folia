@@ -20,7 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -66,12 +66,12 @@ public class Snowman_Turret extends SkillHandler<LocationSkillResult> {
             this.duration = Math.min(skillMeta.getParameter("duration") * 20, 300);
             this.radiusSquared = Math.pow(skillMeta.getParameter("radius"), 2);
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(snowman, 0, 1);
         }
 
         @Override
-        protected BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 int ti = 0;
                 double j = 0;
 

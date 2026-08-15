@@ -10,7 +10,7 @@ import io.lumine.mythic.lib.version.VParticle;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +37,7 @@ public class Leap extends SkillHandler<SimpleSkillResult> {
 
         // Temporary handler bc particle effect needs to stop
         // if the player leaves
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             double ti = 0;
 
             public void run() {

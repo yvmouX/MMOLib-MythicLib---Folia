@@ -15,7 +15,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class Item_Throw extends SkillHandler<ItemSkillResult> {
         item.getEntity().setVelocity(result.getTarget().multiply(1.5 * skillMeta.getParameter("force")));
         caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_SNOWBALL_THROW, 1, 0);
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             double ti = 0;
 
             public void run() {

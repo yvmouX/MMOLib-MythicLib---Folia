@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.script.mechanic.movement;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.script.mechanic.type.TargetMechanic;
 import io.lumine.mythic.lib.script.targeter.LocationTargeter;
 import io.lumine.mythic.lib.script.targeter.location.DefaultLocationTargeter;
@@ -23,6 +24,6 @@ public class TeleportMechanic extends TargetMechanic {
     public void cast(SkillMetadata meta, Entity target) {
         Location targetLocation = this.targetLocation.findTargets(meta).get(0);
         targetLocation.add(0, yOffset, 0);
-        target.teleport(targetLocation);
+        MythicLib.teleport(target, targetLocation);
     }
 }

@@ -15,7 +15,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +46,7 @@ public class Life_Ender extends SkillHandler<LocationSkillResult> {
         double radius = skillMeta.getParameter("radius");
 
         caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_ENDERMAN_TELEPORT, 2, 1);
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             final Location source = loc.clone().add(5 * Math.cos(Math.random() * 2 * Math.PI), 20, 5 * Math.sin(Math.random() * 2 * Math.PI));
             final Vector vec = loc.subtract(source).toVector().multiply((double) 1 / 30);
             int ti = 0;

@@ -15,7 +15,7 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,9 +46,7 @@ public class Combo_Attack extends SkillHandler<TargetSkillResult> {
         playEffect(target);
         skillMeta.getCaster().attack(target, damage, damageTypes);
 
-        TemporaryHandler.task(skillMeta.getCaster().getData(),
-                runnable -> runnable.runTaskTimer(MythicLib.plugin, ATTACK_PERIOD, ATTACK_PERIOD),
-                handler -> new BukkitRunnable() {
+        TemporaryHandler.task(skillMeta.getCaster().getData(), target, ATTACK_PERIOD, ATTACK_PERIOD, handler -> new UniversalRunnable() {
                     int counter = 1;
 
                     @Override

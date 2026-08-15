@@ -343,8 +343,10 @@ public class UtilityMethods {
         int cz = loc.getChunk().getZ();
 
         for (int x = -1; x < 2; x++)
-            for (int z = -1; z < 2; z++)
+            for (int z = -1; z < 2; z++) {
+                if (!loc.getWorld().isChunkLoaded(cx + x, cz + z)) continue;
                 entities.addAll(Arrays.asList(loc.getWorld().getChunkAt(cx + x, cz + z).getEntities()));
+            }
 
         return entities;
     }
@@ -883,9 +885,11 @@ public class UtilityMethods {
         final int cx = loc.getChunk().getX(), cz = loc.getChunk().getZ();
 
         for (int x = -1; x < 2; x++)
-            for (int z = -1; z < 2; z++)
+            for (int z = -1; z < 2; z++) {
+                if (!loc.getWorld().isChunkLoaded(cx + x, cz + z)) continue;
                 for (Entity target : loc.getWorld().getChunkAt(cx + x, cz + z).getEntities())
                     if (target instanceof Player) players.add((Player) target);
+            }
 
         return players;
     }

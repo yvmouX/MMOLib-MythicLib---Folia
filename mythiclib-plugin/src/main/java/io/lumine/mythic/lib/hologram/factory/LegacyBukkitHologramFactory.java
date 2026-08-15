@@ -25,7 +25,7 @@ import java.util.Objects;
 public class LegacyBukkitHologramFactory implements HologramFactory {
 
     public LegacyBukkitHologramFactory() {
-        Bukkit.getScheduler().runTaskLater(MythicLib.plugin, this::clearPreviousEntities, 20L);
+        MythicLib.getScheduler().runLater(MythicLib.plugin, this::clearPreviousEntities, 20L);
     }
 
     @NotNull
@@ -171,7 +171,7 @@ public class LegacyBukkitHologramFactory implements HologramFactory {
 
                     for (Iterator<ArmorStand> var4 = this.getSpawnedEntities().iterator(); var4.hasNext(); offset += 0.25D) {
                         ArmorStand as = (ArmorStand) var4.next();
-                        as.teleport(loc.add(0.0D, offset, 0.0D));
+                        MythicLib.teleport(as, loc.add(0.0D, offset, 0.0D));
                     }
                 }
 

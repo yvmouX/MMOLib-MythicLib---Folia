@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.util;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -24,13 +26,13 @@ public class Tasks {
     @NotNull
     public static CompletableFuture<Void> runAsync(@NotNull Plugin plugin, @NotNull Runnable runnable) {
         final var future = new CompletableFuture<Void>();
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, task -> {
+        MythicLib.getScheduler().runAsync(plugin, () -> {
 
             // Execute task
             try {
                 runnable.run();
             } catch (Throwable throwable) {
-                Bukkit.getScheduler().runTask(plugin, () -> {
+                MythicLib.getScheduler().runTask(plugin, () -> {
                     plugin.getLogger().info("Error caught on async thread:");
                     throwable.printStackTrace();
                 });
@@ -50,7 +52,7 @@ public class Tasks {
      */
     public static void runSync(@NotNull Plugin plugin, @NotNull Runnable runnable) {
         if (Bukkit.isPrimaryThread()) runnable.run();
-        else Bukkit.getScheduler().runTask(plugin, runnable);
+        else MythicLib.getScheduler().runTask(plugin, runnable);
     }
 
     /**

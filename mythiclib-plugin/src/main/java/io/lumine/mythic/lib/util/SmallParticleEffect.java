@@ -1,15 +1,16 @@
 package io.lumine.mythic.lib.util;
 
 import io.lumine.mythic.lib.MythicLib;
+import cn.yvmou.ylib.scheduler.UniversalTask;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class SmallParticleEffect extends BukkitRunnable {
+public class SmallParticleEffect implements Runnable {
     private final Location loc;
     private final Particle particle;
     private final double r;
+    private final UniversalTask task;
 
     private double t;
 
@@ -22,11 +23,11 @@ public class SmallParticleEffect extends BukkitRunnable {
         this.particle = particle;
         this.r = r;
 
-        runTaskTimer(MythicLib.plugin, 0, 1);
+        task = MythicLib.getScheduler().runTimer(entity, this, 0, null, 1);
     }
 
     public void run() {
-        if (t > Math.PI * 2) cancel();
+        if (t > Math.PI * 2) task.cancel();
 
         for (int k = 0; k < 3; k++) {
             t += Math.PI / 10;

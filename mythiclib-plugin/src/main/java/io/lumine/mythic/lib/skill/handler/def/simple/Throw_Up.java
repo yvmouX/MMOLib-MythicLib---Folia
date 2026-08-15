@@ -19,7 +19,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class Throw_Up extends SkillHandler<SimpleSkillResult> {
 
         Player caster = skillMeta.getCaster().getPlayer();
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 2, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 2, handler -> new UniversalRunnable() {
             int j = 0;
 
             public void run() {
@@ -68,7 +68,7 @@ public class Throw_Up extends SkillHandler<SimpleSkillResult> {
                 loc.getWorld().playSound(loc, Sounds.ENTITY_ZOMBIE_HURT, 1, 1);
 
                 NoClipItem item = new NoClipItem(caster.getLocation().add(0, 1.2, 0), new ItemStack(Material.ROTTEN_FLESH));
-                Bukkit.getScheduler().scheduleSyncDelayedTask(MythicLib.plugin, item::close, 40);
+                MythicLib.getScheduler().runLater(MythicLib.plugin, item::close, 40);
                 item.getEntity().setVelocity(loc.getDirection().multiply(.8));
                 caster.getWorld().spawnParticle(VParticle.LARGE_SMOKE.get(), caster.getLocation().add(0, 1.2, 0), 0, loc.getDirection().getX(), loc.getDirection().getY(), loc.getDirection().getZ(), 1);
             }

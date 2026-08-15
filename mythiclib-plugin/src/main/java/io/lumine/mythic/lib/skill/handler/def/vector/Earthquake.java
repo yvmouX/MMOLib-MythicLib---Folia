@@ -15,7 +15,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ public class Earthquake extends SkillHandler<VectorSkillResult> {
         double slowDuration = skillMeta.getParameter("duration");
         double slowAmplifier = skillMeta.getParameter("amplifier");
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             final Vector vec = result.getTarget().setY(0);
             final Location loc = caster.getLocation();
             final List<Integer> hit = new ArrayList<>();

@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -51,9 +51,11 @@ public class Vampirism extends SkillHandler<AttackSkillResult> implements Listen
     }
 
     private static void playParticleEffect(Location loc) {
-        new BukkitRunnable() {
+        new Runnable() {
             double ti = 0;
             double dis = 0;
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(loc, this, 0, 1);
 
             public void run() {
                 for (int j1 = 0; j1 < 4; j1++) {
@@ -65,9 +67,9 @@ public class Vampirism extends SkillHandler<AttackSkillResult> implements Listen
                                 loc.clone().add(Math.cos(j + (ti / 20)) * dis, 0, Math.sin(j + (ti / 20)) * dis), 1,
                                 new Particle.DustOptions(Color.RED, 1));
                 }
-                if (ti >= 17) cancel();
+                if (ti >= 17) task.cancel();
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

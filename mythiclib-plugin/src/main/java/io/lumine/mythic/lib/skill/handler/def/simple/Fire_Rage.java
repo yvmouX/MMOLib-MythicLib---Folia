@@ -18,7 +18,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,15 +67,15 @@ public class Fire_Rage extends SkillHandler<SimpleSkillResult> {
             this.damage = skillMeta.getParameter("damage");
             counter = maxCount = (int) skillMeta.getParameter("count");
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(caster.getPlayer(), 0, 1);
 
             // Time out for skill
             closeAfter(20 * (long) skillMeta.getParameter("duration"));
         }
 
         @Override
-        protected @Nullable BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected @Nullable UniversalRunnable newTask() {
+            return new UniversalRunnable() {
 
                 @Override
                 public void run() {
@@ -116,7 +116,7 @@ public class Fire_Rage extends SkillHandler<SimpleSkillResult> {
         void throwFireball(boolean last) {
             caster.getPlayer().getWorld().playSound(caster.getPlayer().getLocation(), Sounds.ENTITY_FIREWORK_ROCKET_BLAST, 1, last ? 0 : 1);
 
-            TemporaryHandler.timerTask(caster.getData(), 1, handler -> new BukkitRunnable() {
+            TemporaryHandler.timerTask(caster.getData(), 1, handler -> new UniversalRunnable() {
                 int j = 0;
                 final Vector vec = caster.getPlayer().getEyeLocation().getDirection();
                 final Location loc = caster.getPlayer().getLocation().add(0, 1.3, 0);

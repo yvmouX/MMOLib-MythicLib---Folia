@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class FlushableRegistry<K, V> implements Closeable, Listener {
     private final BiPredicate<K, V> condition;
     private final long period;
 
-    private final BukkitRunnable flushRunnable = new BukkitRunnable() {
+    private final UniversalRunnable flushRunnable = new UniversalRunnable() {
 
         @Override
         public void run() {
@@ -45,7 +45,7 @@ public class FlushableRegistry<K, V> implements Closeable, Listener {
         this.condition = condition;
         this.period = period;
 
-        flushRunnable.runTaskTimer(MythicLib.plugin, period, period);
+        flushRunnable.runTimer(MythicLib.plugin, period, period);
         Bukkit.getPluginManager().registerEvents(this, MythicLib.plugin);
     }
 

@@ -17,14 +17,14 @@ public class NativeManaModule implements ManaModule {
 
         // Register loop for natural mana and stamina regeneration
         // Wait a few seconds after server startup
-        Bukkit.getScheduler().runTaskTimer(MythicLib.plugin, this::tickOnlinePlayers, 5 * 20L, period);
+        MythicLib.getScheduler().runTimer(MythicLib.plugin, this::tickOnlinePlayers, 5 * 20L, period);
     }
 
     private void tickOnlinePlayers() {
-        MMOPlayerData.forEachPlaying(player -> {
+        MMOPlayerData.forEachPlaying(player -> MythicLib.getScheduler().runTask(player.getPlayer(), () -> {
             player.getResources().giveMana(player.getStatMap().getStat(SharedStat.MANA_REGENERATION) * regenCoefficient, ResourceUpdateReason.REGENERATION);
             player.getResources().giveStamina(player.getStatMap().getStat(SharedStat.STAMINA_REGENERATION) * regenCoefficient, ResourceUpdateReason.REGENERATION);
-        });
+        }));
     }
 
     @Override

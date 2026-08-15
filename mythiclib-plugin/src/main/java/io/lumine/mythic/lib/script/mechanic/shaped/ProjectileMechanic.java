@@ -11,7 +11,7 @@ import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
@@ -72,7 +72,9 @@ public class ProjectileMechanic extends DirectionMechanic {
         final double projLifeSpan = lifeSpan.evaluate(meta);
         Validate.isTrue(projLifeSpan > 0, "Life span must be strictly positive (don't make it too low)");
 
-        new BukkitRunnable() {
+        new Runnable() {
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(source, this, 0, 1);
 
             // Register for hit entities
             final List<Integer> hitEntities = hitLimit > 1 ? new ArrayList<>() : null;
@@ -89,7 +91,7 @@ public class ProjectileMechanic extends DirectionMechanic {
 
             public void run() {
                 if (counter++ >= projLifeSpan) {
-                    cancel();
+                    task.cancel();
                     return;
                 }
 
@@ -107,7 +109,7 @@ public class ProjectileMechanic extends DirectionMechanic {
 
                 if (onHitBlock != null && result.getHitBlock() != null) {
                     onHitBlock.cast(meta.clone(source, result.getHitPosition().toLocation(current.getWorld()), null));
-                    if (stopOnBlock) cancel();
+                    if (stopOnBlock) task.cancel();
                 }
 
                 if (onHitEntity != null && result.getHitEntity() != null) {
@@ -115,11 +117,11 @@ public class ProjectileMechanic extends DirectionMechanic {
                     // Register entity hit
                     if (hitEntities != null && (hitEntities.size() + 1) < hitLimit) {
                         hitEntities.add(result.getHitEntity().getEntityId());
-                    } else cancel();
+                    } else task.cancel();
 
                     onHitEntity.cast(meta.clone(source, result.getHitPosition().toLocation(current.getWorld()), result.getHitEntity()));
                 }
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 }

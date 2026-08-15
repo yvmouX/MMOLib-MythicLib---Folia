@@ -82,7 +82,7 @@ public class IndicatorConfig {
 
         // No movement
         if (!move)
-            Bukkit.getScheduler().runTaskLater(MythicLib.plugin, holo::despawn, lifespan);
+            MythicLib.getScheduler().runLater(MythicLib.plugin, holo::despawn, lifespan);
         else holo.flyOut(this, dir);
     }
 }

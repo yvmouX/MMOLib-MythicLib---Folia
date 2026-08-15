@@ -16,7 +16,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,12 +57,12 @@ public class Control extends SkillHandler<TargetSkillResult> {
             d = duration * 20;
             f = force;
 
-            runTask(r -> r.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(entity, 0, 1);
         }
 
         @Override
-        protected @Nullable BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected @Nullable UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 @Override
                 public void run() {
                     if (entity.isDead() || j++ >= d) {

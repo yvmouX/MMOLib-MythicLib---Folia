@@ -3,7 +3,7 @@ package io.lumine.mythic.lib.hologram;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.util.IndicatorConfig;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public abstract class Hologram {
     public abstract void updateLocation(@NotNull Location loc);
 
     public void flyOut(@NotNull IndicatorConfig settings, @NotNull Vector dir) {
-        new BukkitRunnable() {
+        new UniversalRunnable() {
             final Location loc = getLocation().clone();
             double v = 6 * settings.initialUpwardVelocity; // Initial upward velocity
             int ticks = 0; // Counter
@@ -42,7 +42,7 @@ public abstract class Hologram {
                 loc.add(dir.getX() * DT, v * DT, dir.getZ() * DT);
                 updateLocation(loc);
             }
-        }.runTaskTimer(MythicLib.plugin, 0, settings.tickPeriod);
+        }.runTimer(MythicLib.plugin, 0, settings.tickPeriod);
     }
 
     public abstract void updateLines(List<String> lines);

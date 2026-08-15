@@ -1,7 +1,7 @@
 package io.lumine.mythic.lib.glow.external;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.glow.GlowModule;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.inventivetalent.glow.GlowAPI;
@@ -46,11 +46,11 @@ public class GlowAPIModule implements GlowModule {
 
     @Override
     public void setGlowing(Entity entity, ChatColor color) {
-        GlowAPI.setGlowing(entity, Objects.requireNonNull(glowColors.get(color), "Color not found"), Bukkit.getOnlinePlayers());
+        GlowAPI.setGlowing(entity, Objects.requireNonNull(glowColors.get(color), "Color not found"), MythicLib.getOnlinePlayers());
     }
 
     @Override
     public void disableGlowing(Entity entity) {
-        GlowAPI.setGlowing(entity, GlowAPI.Color.NONE, Bukkit.getOnlinePlayers());
+        GlowAPI.setGlowing(entity, GlowAPI.Color.NONE, MythicLib.getOnlinePlayers());
     }
 }

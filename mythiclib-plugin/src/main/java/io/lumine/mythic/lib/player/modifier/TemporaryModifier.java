@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.util.Closeable;
 import io.lumine.mythic.lib.util.annotation.NotUsed;
 import io.lumine.mythic.lib.util.lang3.Validate;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 
 @Deprecated
 @NotUsed
@@ -13,7 +13,7 @@ public class TemporaryModifier<T extends PlayerModifier> implements Closeable {
     private final T applied;
     private final int duration;
 
-    private BukkitRunnable closeTask;
+    private UniversalRunnable closeTask;
     private long startTime;
 
     @Deprecated
@@ -55,7 +55,7 @@ public class TemporaryModifier<T extends PlayerModifier> implements Closeable {
         var parentMap = (ModifierMap<T>) this.applied.getMap(playerData); // Keep ref to modified stat map
         parentMap.addModifier(this.applied); // Apply modifier
 
-        closeTask = new BukkitRunnable() {
+        closeTask = new UniversalRunnable() {
 
             @Override
             public void run() {
@@ -66,7 +66,7 @@ public class TemporaryModifier<T extends PlayerModifier> implements Closeable {
                 parentMap.removeModifier(TemporaryModifier.this.applied.getUniqueId());
             }
         };
-        closeTask.runTaskLater(MythicLib.plugin, this.duration);
+        closeTask.runLater(MythicLib.plugin, this.duration);
         this.startTime = System.currentTimeMillis();
     }
 

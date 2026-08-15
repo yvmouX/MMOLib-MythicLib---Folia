@@ -3,7 +3,7 @@ package io.lumine.mythic.lib.data;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.profile.SessionUpdateReason;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,7 +79,7 @@ public class DataExport<H extends SynchronizedDataHolder, O extends OfflineDataH
         output.sendMessage("ETA: " + DECIMAL_FORMAT.format(timeEstimation) + "s");
 
         // Save player data
-        new BukkitRunnable() {
+        new UniversalRunnable() {
             int errorCount = 0;
             int batchCounter = 0;
 
@@ -117,7 +117,7 @@ public class DataExport<H extends SynchronizedDataHolder, O extends OfflineDataH
 
                 batchCounter++;
             }
-        }.runTaskTimerAsynchronously(manager.getOwningPlugin(), 0, BATCH_PERIOD);
+        }.runTimerAsync(manager.getOwningPlugin(), 0, BATCH_PERIOD);
 
         return true;
     }

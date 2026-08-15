@@ -1,10 +1,10 @@
 package io.lumine.mythic.lib.data;
 
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 
 import java.util.logging.Level;
 
-public class AutoSaveRunnable extends BukkitRunnable {
+public class AutoSaveRunnable extends UniversalRunnable {
     private final SynchronizedDataManager<?, ?> manager;
     private final boolean log;
 
@@ -20,7 +20,7 @@ public class AutoSaveRunnable extends BukkitRunnable {
         log = config.getBoolean("log", false);
         final var timer = Math.max(MINIMUM_INTERVAL, config.getLong("interval", 60 * 30)) * 20;
         // This cannot run async because of events and player data loading.
-        runTaskTimer(manager.getOwningPlugin(), timer, timer);
+        runTimer(manager.getOwningPlugin(), timer, timer);
     }
 
     @Override

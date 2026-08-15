@@ -13,7 +13,7 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,7 @@ public class Fire_Storm extends SkillHandler<TargetSkillResult> {
         final int ignite = (int) (20 * skillMeta.getParameter("ignite"));
 
         caster.getPlayer().getWorld().playSound(caster.getPlayer().getLocation(), Sounds.ENTITY_FIREWORK_ROCKET_BLAST, 1, 1);
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 4, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 4, handler -> new UniversalRunnable() {
             int j = 0;
 
             @Override

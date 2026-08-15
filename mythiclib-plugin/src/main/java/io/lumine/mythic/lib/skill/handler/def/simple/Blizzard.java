@@ -14,7 +14,7 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -52,12 +52,12 @@ public class Blizzard extends SkillHandler<SimpleSkillResult> {
 
             this.caster = skillMeta.getCaster().getPlayer();
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 2));
+            runTask(caster, 0, 2);
         }
 
         @Override
-        protected BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 int j = 0;
 
                 public void run() {

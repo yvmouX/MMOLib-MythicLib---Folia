@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.simple;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
@@ -47,7 +48,7 @@ public class Blink extends SkillHandler<SimpleSkillResult> {
                 rtResult.getHitPosition().add(rtResult.getHitBlockFace().getDirection().multiply(.3)).toLocation(caster.getWorld());
         loc.setYaw(caster.getLocation().getYaw());
         loc.setPitch(caster.getLocation().getPitch());
-        caster.teleport(loc);
+        MythicLib.teleport(caster, loc);
 
         // Effects on newest position
         playParticleEffect(caster.getLocation().add(0, 1, 0));

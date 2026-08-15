@@ -11,7 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 @BuiltinSkillHandler
@@ -35,12 +35,14 @@ public class Confuse extends SkillHandler<TargetSkillResult> {
 
         Location loc = target.getLocation().clone();
         loc.setYaw(target.getLocation().getYaw() - 180);
-        target.teleport(loc);
+        MythicLib.teleport(target, loc);
     }
 
     private void playParticleEffect(Location loc, double startAngle) {
-        new BukkitRunnable() {
+        new Runnable() {
             double ti = startAngle;
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(loc, this, 0, 1);
 
             public void run() {
                 for (int j1 = 0; j1 < 3; j1++) {
@@ -48,8 +50,8 @@ public class Confuse extends SkillHandler<TargetSkillResult> {
                     Location loc1 = loc.clone().add(Math.cos(ti), 1, Math.sin(ti));
                     loc.getWorld().spawnParticle(VParticle.WITCH.get(), loc1, 0);
                 }
-                if (ti >= Math.PI * 2 + startAngle) cancel();
+                if (ti >= Math.PI * 2 + startAngle) task.cancel();
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 }

@@ -157,6 +157,13 @@
             <version>1.10.11-SNAPSHOT</version>
             <optional>true</optional>
         </dependency>
+        <!-- YLib: platform-agnostic scheduler (Folia/Paper/Spigot) -->
+        <dependency>
+            <groupId>com.github.yvmouX</groupId>
+            <artifactId>YLib</artifactId>
+            <version>1.0.0-beta5</version>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Paper API & Libs (soft dependencies) -->
         <dependency>

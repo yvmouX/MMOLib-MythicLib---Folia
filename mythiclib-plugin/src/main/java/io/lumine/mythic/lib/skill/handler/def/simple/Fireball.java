@@ -17,7 +17,7 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +46,7 @@ public class Fireball extends SkillHandler<SimpleSkillResult> {
 
         caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_FIREWORK_ROCKET_BLAST, 1, 1);
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             int j = 0;
             final Vector vec = caster.getPlayer().getEyeLocation().getDirection();
             final Location loc = caster.getPlayer().getLocation().add(0, 1.3, 0);
@@ -74,7 +74,7 @@ public class Fireball extends SkillHandler<SimpleSkillResult> {
                     double damage = skillMeta.getParameter("damage");
                     skillMeta.getCaster().attack(target, damage, damageTypes);
 
-                    TemporaryHandler.task(skillMeta.getCaster().getData(), r -> r.runTaskTimer(MythicLib.plugin, 3, 3), handler1 -> new BukkitRunnable() {
+                    TemporaryHandler.task(skillMeta.getCaster().getData(), target, 3, 3, handler1 -> new UniversalRunnable() {
                         int i = 0;
 
                         @Override

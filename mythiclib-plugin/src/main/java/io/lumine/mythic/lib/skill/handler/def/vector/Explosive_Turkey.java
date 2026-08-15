@@ -16,7 +16,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -88,12 +88,12 @@ public class Explosive_Turkey extends SkillHandler<VectorSkillResult> {
             this.knockback = skillMeta.getParameter("knockback");
             this.trajRatio = chicken.getVelocity().getX() / chicken.getVelocity().getZ();
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(chicken, 0, 1);
         }
 
         @Override
-        protected BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 int ti = 0;
 
                 public void run() {

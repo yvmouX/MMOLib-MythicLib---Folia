@@ -15,7 +15,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +42,7 @@ public class Tactical_Grenade extends SkillHandler<TargetSkillResult> {
         LivingEntity target = result.getTarget();
         Player caster = skillMeta.getCaster().getPlayer();
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 12, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 12, handler -> new UniversalRunnable() {
             final Location loc = caster.getLocation().add(0, .1, 0);
             final double radius = skillMeta.getParameter("radius");
             final double knockup = .7 * skillMeta.getParameter("knock-up");

@@ -2,15 +2,15 @@ package io.lumine.mythic.lib.util;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.version.VParticle;
+import cn.yvmou.ylib.scheduler.UniversalTask;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.function.Consumer;
 
-public class ParabolicProjectile extends BukkitRunnable {
+public class ParabolicProjectile implements Runnable {
     private final Location target;
     private final Consumer<Location> display;
     private final Vector vec;
@@ -19,6 +19,7 @@ public class ParabolicProjectile extends BukkitRunnable {
 
     // Calculation
     private final Location loc;
+    private final UniversalTask task;
     private int j;
 
     public ParabolicProjectile(Location source, Location target, Color color) {
@@ -58,7 +59,7 @@ public class ParabolicProjectile extends BukkitRunnable {
         this.vec = vec;
         this.speed = Math.max(1, speed);
 
-        runTaskTimer(MythicLib.plugin, 0, 1);
+        task = MythicLib.getScheduler().runTimer(loc, this, 0, 1);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class ParabolicProjectile extends BukkitRunnable {
         for (int k = 0; k < speed; k++) {
             if (j++ > 100 || loc.distanceSquared(target) < .8) {
                 end.run();
-                cancel();
+                task.cancel();
             }
 
             double c = Math.min(1, (double) j / 40);

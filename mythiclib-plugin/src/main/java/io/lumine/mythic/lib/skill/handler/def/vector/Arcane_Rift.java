@@ -16,7 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +47,7 @@ public class Arcane_Rift extends SkillHandler<VectorSkillResult> {
         double slowAmplifier = skillMeta.getParameter("amplifier");
 
         caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_ENDERMAN_DEATH, 2, .5f);
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             final Vector vec = result.getTarget().setY(0).normalize().multiply(.5 * skillMeta.getParameter("speed"));
             final Location loc = caster.getLocation();
             final int duration = (int) (20 * Math.min(skillMeta.getParameter("duration"), 10.));

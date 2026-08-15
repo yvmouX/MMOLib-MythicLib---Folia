@@ -7,7 +7,7 @@ import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.player.modifier.ModifierType;
 import io.lumine.mythic.lib.util.Closeable;
 import io.lumine.mythic.lib.util.lang3.Validate;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -15,7 +15,7 @@ import java.util.UUID;
 // TODO temporary modifiers could wrap any modifier, not just a stat modifier.
 // TODO deprecate this class
 public class TemporaryStatModifier extends StatModifier implements Closeable {
-    private BukkitRunnable closeTask;
+    private UniversalRunnable closeTask;
     private long duration, startTime;
 
     public TemporaryStatModifier(String key, String stat, double value, ModifierType type, EquipmentSlot slot, ModifierSource source) {
@@ -65,13 +65,13 @@ public class TemporaryStatModifier extends StatModifier implements Closeable {
         // See class TemporaryModifier for explanation.
         var statInstance = playerData.getStatMap().getInstance(getStat());
         statInstance.registerModifier(this);
-        closeTask = new BukkitRunnable() {
+        closeTask = new UniversalRunnable() {
             @Override
             public void run() {
                 statInstance.removeModifier(getUniqueId());
             }
         };
-        closeTask.runTaskLater(MythicLib.plugin, duration);
+        closeTask.runLater(MythicLib.plugin, duration);
         this.duration = duration;
         this.startTime = System.currentTimeMillis();
     }

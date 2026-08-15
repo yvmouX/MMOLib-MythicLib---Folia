@@ -22,7 +22,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,7 +106,7 @@ public class ProjectileMetadata extends TemporaryHandler {
         // Trigger skills
         final var shouldTick = shouldTickProjectiles();
         if (shouldTick)
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(projectile, 0, 1);
 
         // Register
         projectile.setMetadata(METADATA_KEY, new FixedMetadataValue(MythicLib.plugin, this));
@@ -118,8 +118,8 @@ public class ProjectileMetadata extends TemporaryHandler {
     }
 
     @Override
-    protected @Nullable BukkitRunnable newTask() {
-        return new BukkitRunnable() {
+    protected @Nullable UniversalRunnable newTask() {
+        return new UniversalRunnable() {
 
             @Override
             public void run() {
@@ -186,7 +186,7 @@ public class ProjectileMetadata extends TemporaryHandler {
     public void unregisterOnHit(ProjectileHitEvent event) {
         if (event.getEntity().getEntityId() == entityId)
             // Close with delay to make sure skills are triggered on hit/land
-            Bukkit.getScheduler().runTask(MythicLib.plugin, this::close);
+            MythicLib.getScheduler().runTask(MythicLib.plugin, this::close);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

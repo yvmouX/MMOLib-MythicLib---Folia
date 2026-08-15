@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.misc;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -38,7 +39,7 @@ public class Warp extends SkillHandler<Warp.WarpSkillResult> {
         new ParabolicProjectile(caster.getLocation().add(0, 1, 0), loc.clone().add(0, 1, 0), () -> {
             if (UtilityMethods.isInvalidated(skillMeta.getCaster())) return;
 
-            caster.teleport(loc);
+            MythicLib.teleport(caster, loc);
             caster.getWorld().spawnParticle(VParticle.LARGE_EXPLOSION.get(), caster.getLocation().add(0, 1, 0), 0);
             VParticle.INSTANT_EFFECT.spawnSafeSpell(caster.getLocation().add(0, 1, 0), 32, 0, 0, 0, .1);
             caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_ENDERMAN_TELEPORT, 1, 1);

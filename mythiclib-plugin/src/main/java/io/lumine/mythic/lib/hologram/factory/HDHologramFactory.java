@@ -25,7 +25,7 @@ public class HDHologramFactory implements HologramFactory {
         hologram.appendTextLine(format);
         if (player != null)
             hologram.getVisibilityManager().hideTo(player);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(MythicLib.plugin, hologram::delete, 20);
+        MythicLib.getScheduler().runLater(MythicLib.plugin, hologram::delete, 20);
     }*/
 
     @NotNull

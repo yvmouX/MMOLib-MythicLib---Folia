@@ -10,7 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 @BuiltinSkillHandler(mods = {"duration"})
@@ -40,8 +40,10 @@ public class Burn extends SkillHandler<TargetSkillResult> {
     }
 
     private void playParticleEffect(Location loc) {
-        new BukkitRunnable() {
+        new Runnable() {
             double y = 0;
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(loc, this, 0, 1);
 
             public void run() {
                 for (int j1 = 0; j1 < 3; j1++) {
@@ -52,8 +54,8 @@ public class Burn extends SkillHandler<TargetSkillResult> {
                         loc.getWorld().spawnParticle(Particle.FLAME, loc1, 0);
                     }
                 }
-                if (y >= 1.7) cancel();
+                if (y >= 1.7) task.cancel();
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 }

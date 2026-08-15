@@ -216,7 +216,7 @@ public abstract class GeneratedInventory extends PluginInventory {
 
     @Deprecated
     public void asyncUpdate(InventoryItem<?> item, int n, ItemStack placed, Consumer<ItemStack> update) {
-        Bukkit.getScheduler().runTaskAsynchronously(MythicLib.plugin, () -> {
+        MythicLib.getScheduler().runAsync(MythicLib.plugin, () -> {
             if (lastOpened == null) return;
             update.accept(placed);
             lastOpened.setItem(item.getSlots().get(n), placed);
@@ -226,7 +226,7 @@ public abstract class GeneratedInventory extends PluginInventory {
     @Deprecated
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void asyncUpdate(InventoryItem<?> item, int n) {
-        Bukkit.getScheduler().runTaskAsynchronously(MythicLib.plugin, () -> {
+        MythicLib.getScheduler().runAsync(MythicLib.plugin, () -> {
             if (lastOpened == null) return;
             final var placed = ((InventoryItem) item).getDisplayedItem(this, n);
             lastOpened.setItem(item.getSlots().get(n), placed);

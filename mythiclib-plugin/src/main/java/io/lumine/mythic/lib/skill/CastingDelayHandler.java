@@ -16,7 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -49,7 +49,7 @@ public class CastingDelayHandler extends TemporaryHandler {
         this.skillResult = result;
 
         // Implement a runnable to run the task later
-        runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 1));
+        runTask(metadata.getCaster().getPlayer(), 0, 1);
 
         // Play sound
         castIfNotNull(MythicLib.plugin.getMMOConfig().skillCastScript);
@@ -74,8 +74,8 @@ public class CastingDelayHandler extends TemporaryHandler {
     }
 
     @Override
-    protected BukkitRunnable newTask() {
-        return new BukkitRunnable() {
+    protected UniversalRunnable newTask() {
+        return new UniversalRunnable() {
             private int counter = delayTicks;
 
             @Override

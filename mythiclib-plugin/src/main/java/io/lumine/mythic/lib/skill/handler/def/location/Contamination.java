@@ -16,7 +16,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class Contamination extends SkillHandler<LocationSkillResult> {
         double duration = Math.min(30, skillMeta.getParameter("duration")) * 20;
 
         loc.add(0, .1, 0);
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             final double dps = skillMeta.getParameter("damage") / 2;
             double ti = 0;
             int j = 0;

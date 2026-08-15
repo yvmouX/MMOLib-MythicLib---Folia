@@ -26,7 +26,7 @@ public class HealthScale implements Listener {
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        Bukkit.getScheduler().runTaskLater(MythicLib.plugin, () -> {
+        MythicLib.getScheduler().runLater(MythicLib.plugin, () -> {
             player.setHealthScaled(true);
             player.setHealthScale(scale);
         }, delay);
@@ -67,7 +67,7 @@ public void onEnable() {
 @EventHandler
 private void onJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
-    Bukkit.getScheduler().runTaskLater(MythicLib.plugin, () -> {
+    MythicLib.getScheduler().runLater(MythicLib.plugin, () -> {
         player.setHealthScaled(true);
         player.setHealthScale(scale);
     }, delay);

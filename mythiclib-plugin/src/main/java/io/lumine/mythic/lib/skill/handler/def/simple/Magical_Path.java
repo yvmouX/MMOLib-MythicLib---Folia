@@ -16,7 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 @BuiltinSkillHandler(mods = {"duration"})
@@ -59,14 +59,14 @@ public class Magical_Path extends SkillHandler<SimpleSkillResult> {
             player.setVelocity(player.getVelocity().setY(.5));
             player.getWorld().playSound(player.getLocation(), Sounds.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
-            runTask(r -> r.runTaskTimer(MythicLib.plugin, 0, 2));
+            runTask(player, 0, 2);
         }
 
         private static final int SMALL_DELAY = 2;
 
         @Override
-        protected BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected UniversalRunnable newTask() {
+            return new UniversalRunnable() {
 
                 @Override
                 public void run() {

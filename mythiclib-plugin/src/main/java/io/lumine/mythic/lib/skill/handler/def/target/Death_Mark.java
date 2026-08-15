@@ -12,7 +12,7 @@ import io.lumine.mythic.lib.version.VPotionEffectType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class Death_Mark extends SkillHandler<TargetSkillResult> {
         double duration = skillMeta.getParameter("duration") * 20;
         double dps = skillMeta.getParameter("damage") / duration * 20;
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             int ti = 0;
 
             public void run() {

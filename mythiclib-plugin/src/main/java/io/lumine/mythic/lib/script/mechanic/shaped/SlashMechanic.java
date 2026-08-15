@@ -11,7 +11,7 @@ import io.lumine.mythic.lib.util.EntityLocationType;
 import io.lumine.mythic.lib.util.configobject.ConfigObject;
 import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +65,9 @@ public class SlashMechanic extends Mechanic {
         final Vector radialAxis = dir.clone().normalize();
         final Vector slashDirection = dir.clone().setY(0).rotateAroundY(-Math.PI / 2).rotateAroundAxis(radialAxis, Math.toRadians(angle)).normalize();
 
-        new BukkitRunnable() {
+        new Runnable() {
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(source, this, 0, timeInterval);
 
             // Tick counter
             int counter = 0;
@@ -81,7 +83,7 @@ public class SlashMechanic extends Mechanic {
                      * code will make the runnable loop forever.
                      */
                     if (counter++ >= points) {
-                        cancel();
+                        task.cancel();
                         return;
                     }
 
@@ -95,6 +97,6 @@ public class SlashMechanic extends Mechanic {
                     cast.cast(meta.clone(source, intermediate, null));
                 }
             }
-        }.runTaskTimer(MythicLib.plugin, 0, timeInterval);
+        };
     }
 }

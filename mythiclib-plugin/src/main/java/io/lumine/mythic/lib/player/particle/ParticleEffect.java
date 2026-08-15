@@ -12,7 +12,7 @@ import io.lumine.mythic.lib.util.configobject.ConfigObject;
 import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
+import cn.yvmou.ylib.scheduler.UniversalTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +56,7 @@ public abstract class ParticleEffect extends PlayerModifier implements Closeable
     //region Bukkit Task
 
     @Nullable(value = "not null when started")
-    private BukkitTask runningTask;
+    private UniversalTask runningTask;
 
     public boolean isStarted() {
         return runningTask != null;
@@ -68,7 +68,7 @@ public abstract class ParticleEffect extends PlayerModifier implements Closeable
 
         Validate.notNull(playerData, "No player data bound");
         this.player = playerData.getPlayer(); // Does not work if offline
-        runningTask = Bukkit.getScheduler().runTaskTimer(MythicLib.plugin, this::tick, 0, getType().getPeriod());
+        runningTask = MythicLib.getScheduler().runTimer(player, this::tick, 0, null, getType().getPeriod());
         return this;
     }
 

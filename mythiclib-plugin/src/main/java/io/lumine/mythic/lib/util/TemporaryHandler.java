@@ -3,13 +3,16 @@ package io.lumine.mythic.lib.util;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.util.lang3.Validate;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
+import cn.yvmou.ylib.scheduler.UniversalTask;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +52,14 @@ public abstract class TemporaryHandler implements Listener {
      * for instance. This is purely optional.
      */
     @Nullable
-    private BukkitRunnable runnable;
+    private UniversalRunnable runnable;
+
+    /**
+     * Set when {@link #runTask(Entity, long, long)} is used to schedule the
+     * task scoped to an entity (Folia entity scheduler).
+     */
+    @Nullable
+    private UniversalTask task;
 
     public TemporaryHandler(@NotNull HandlerList... handlerLists) {
         this(MythicLib.plugin, handlerLists);
@@ -105,7 +115,11 @@ public abstract class TemporaryHandler implements Listener {
         open = false;
         if (!fromSession && this.attachedPlayer != null) this.attachedPlayer.removeTemporaryHandler(this);
         onClose();
-        if (runnable != null && !runnable.isCancelled()) {
+        if (task != null) {
+            if (!task.isCancelled()) task.cancel();
+            task = null;
+            runnable = null;
+        } else if (runnable != null && !runnable.isCancelled()) {
             runnable.cancel();
             runnable = null;
         }
@@ -119,20 +133,45 @@ public abstract class TemporaryHandler implements Listener {
      * @param duration Delay before un-registration
      */
     public void closeAfter(long duration) {
-        Bukkit.getScheduler().runTaskLater(MythicLib.plugin, this::close, duration);
+        MythicLib.getScheduler().runLater(MythicLib.plugin, this::close, duration);
     }
 
-    public void runTask(@NotNull Consumer<BukkitRunnable> action) {
-        Validate.isTrue(this.runnable == null, "Runnable already registered");
+    public void runTask(@NotNull Consumer<UniversalRunnable> action) {
+        Validate.isTrue(this.runnable == null && this.task == null, "Runnable already registered");
 
         this.runnable = Objects.requireNonNull(newTask(), "#newTask() returned null");
         action.accept(runnable);
     }
 
+    /**
+     * Schedules the task returned by {@link #newTask()} as a repeating task
+     * scoped to an entity. On Folia this executes the task on the entity's own
+     * region thread, and the handler is closed automatically if the entity is
+     * removed.
+     */
+    public void runTask(@NotNull Entity entity, long delay, long period) {
+        Validate.isTrue(this.runnable == null && this.task == null, "Runnable already registered");
+
+        this.runnable = Objects.requireNonNull(newTask(), "#newTask() returned null");
+        this.task = MythicLib.getScheduler().runTimer(entity, runnable, delay, this::close, period);
+    }
+
+    /**
+     * Schedules the task returned by {@link #newTask()} as a repeating task
+     * scoped to a location. On Folia this executes the task on the region
+     * thread owning that location.
+     */
+    public void runTask(@NotNull Location location, long delay, long period) {
+        Validate.isTrue(this.runnable == null && this.task == null, "Runnable already registered");
+
+        this.runnable = Objects.requireNonNull(newTask(), "#newTask() returned null");
+        this.task = MythicLib.getScheduler().runTimer(location, runnable, delay, period);
+    }
+
     //region To be overridden
 
     @Nullable
-    protected BukkitRunnable newTask() {
+    protected UniversalRunnable newTask() {
         // Must be overridden if used
         return null;
     }
@@ -157,21 +196,37 @@ public abstract class TemporaryHandler implements Listener {
     @NotNull
     public static TemporaryHandler timerTask(@NotNull MMOPlayerData attachedPlayer,
                                              long taskPeriod,
-                                             @NotNull Function<TemporaryHandler, BukkitRunnable> task) {
-        return task(attachedPlayer, runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, taskPeriod), task);
+                                             @NotNull Function<TemporaryHandler, UniversalRunnable> task) {
+        return task(attachedPlayer, attachedPlayer.getPlayer(), 0, taskPeriod, task);
     }
 
     @NotNull
     public static TemporaryHandler task(@NotNull MMOPlayerData attachedPlayer,
-                                        @NotNull Consumer<BukkitRunnable> taskAction,
-                                        @NotNull Function<TemporaryHandler, BukkitRunnable> task) {
+                                        @NotNull Consumer<UniversalRunnable> taskAction,
+                                        @NotNull Function<TemporaryHandler, UniversalRunnable> task) {
         TemporaryHandler handler = new TemporaryHandler(attachedPlayer) {
             @Override
-            protected BukkitRunnable newTask() {
+            protected UniversalRunnable newTask() {
                 return task.apply(this);
             }
         };
         handler.runTask(taskAction);
+        return handler;
+    }
+
+    @NotNull
+    public static TemporaryHandler task(@NotNull MMOPlayerData attachedPlayer,
+                                        @NotNull Entity entity,
+                                        long delay,
+                                        long period,
+                                        @NotNull Function<TemporaryHandler, UniversalRunnable> task) {
+        TemporaryHandler handler = new TemporaryHandler(attachedPlayer) {
+            @Override
+            protected UniversalRunnable newTask() {
+                return task.apply(this);
+            }
+        };
+        handler.runTask(entity, delay, period);
         return handler;
     }
 

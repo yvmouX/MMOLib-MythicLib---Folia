@@ -15,7 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,12 +53,12 @@ public class Chicken_Wraith extends SkillHandler<SimpleSkillResult> {
 
             this.caster = skillMeta.getCaster().getPlayer();
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 2));
+            runTask(caster, 0, 2);
         }
 
         @Override
-        protected @Nullable BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected @Nullable UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 int j = 0;
 
                 public void run() {

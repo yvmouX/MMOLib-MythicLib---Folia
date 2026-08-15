@@ -80,8 +80,8 @@ public abstract class SynchronizedDataManager<H extends SynchronizedDataHolder, 
             //UtilityMethods.debug(owning, "Data", "Applying database migrations...");
             this.database.setup();
 
-            Bukkit.getScheduler().runTaskAsynchronously(owning, saveQueue);
-            Bukkit.getScheduler().runTaskAsynchronously(owning, loadQueue);
+            MythicLib.getScheduler().runAsync(owning, saveQueue);
+            MythicLib.getScheduler().runAsync(owning, loadQueue);
             UtilityMethods.debug(owning, "Data", "Database ready");
         });
     }

@@ -22,7 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -378,7 +378,7 @@ public class MythicCraftingManager implements Listener {
             mapping.applyToResultInventory(inven, new MythicRecipeInventory(), false);
         }
 
-        (new BukkitRunnable() {
+        (new UniversalRunnable() {
             public void run() {
                 //RDR//log("\u00a78RDR \u00a746\u00a77 Tick waited, checking...");
                 //ISPM//for (int i = 0; i < inven.getSize(); i++) { MythicCraftingManager.log("\u00a78After Tick \u00a7d@" + i + " \u00a7f" + SilentNumbers.getItemName(inven.getItem(i))); }
@@ -390,7 +390,7 @@ public class MythicCraftingManager implements Listener {
 
                 //ISPM//for (int i = 0; i < inven.getSize(); i++) { MythicCraftingManager.log("\u00a78Post Display \u00a7c@" + i + " \u00a7f" + SilentNumbers.getItemName(inven.getItem(i))); }
             }
-        }).runTaskLater(MythicLib.plugin, 1L);
+        }).runLater(MythicLib.plugin, 1L);
 
 
         //ISPM//for (int i = 0; i < inven.getSize(); i++) { MythicCraftingManager.log("\u00a78Pre Tick \u00a73@" + i + " \u00a7f" + SilentNumbers.getItemName(inven.getItem(i))); }

@@ -17,7 +17,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +49,7 @@ public class Ice_Spikes extends SkillHandler<LocationSkillResult> {
         double damage = skillMeta.getParameter("damage");
         int slow = (int) (20 * skillMeta.getParameter("slow"));
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 5, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 5, handler -> new UniversalRunnable() {
             int j = 0;
 
             @Override

@@ -26,7 +26,7 @@ public class BukkitHologramFactory implements HologramFactory /*, Listener*/ {
         Validate.isTrue(MythicLib.plugin.getVersion().isAbove(1, 19, 4), "Text displays are only available on 1.19.4+");
         //Bukkit.getPluginManager().registerEvents(this, MythicLib.plugin);
 
-        Bukkit.getScheduler().runTaskLater(MythicLib.plugin, this::clearPreviousEntities, 20L);
+        MythicLib.getScheduler().runLater(MythicLib.plugin, this::clearPreviousEntities, 20L);
     }
 
     private void clearPreviousEntities() {
@@ -112,7 +112,7 @@ public class BukkitHologramFactory implements HologramFactory /*, Listener*/ {
 
             Location clone = loc.clone();
             for (TextDisplay textDisplay : getSpawnedEntities()) {
-                textDisplay.teleport(clone);
+                MythicLib.teleport(textDisplay, clone);
                 clone.subtract(0, LINE_OFFSET, 0);
             }
         }

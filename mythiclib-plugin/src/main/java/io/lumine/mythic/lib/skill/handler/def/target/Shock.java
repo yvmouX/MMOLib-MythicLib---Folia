@@ -12,7 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 @BuiltinSkillHandler(mods = {"duration"})
@@ -36,19 +36,23 @@ public class Shock extends SkillHandler<TargetSkillResult> {
         target.getWorld().playSound(target.getLocation(), Sounds.ENTITY_ZOMBIE_PIGMAN_ANGRY, 1, 2);
         playParticleEffect(target.getLocation(), Math.toRadians(caster.getEyeLocation().getYaw() - 90));
 
-        new BukkitRunnable() {
+        new Runnable() {
             int ti = 0;
 
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(target, this, 0, null, 2);
+
             public void run() {
-                if (ti++ > (duration * 10) || target.isDead()) cancel();
+                if (ti++ > (duration * 10) || target.isDead()) task.cancel();
                 else target.playEffect(EntityEffect.HURT);
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 2);
+        };
     }
 
     private void playParticleEffect(Location loc, double startingAngle) {
-        new BukkitRunnable() {
+        new Runnable() {
             double ti = startingAngle;
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(loc, this, 0, 1);
 
             public void run() {
                 for (int j = 0; j < 3; j++) {
@@ -56,8 +60,8 @@ public class Shock extends SkillHandler<TargetSkillResult> {
                     loc.getWorld().spawnParticle(VParticle.LARGE_SMOKE.get(), loc.clone().add(Math.cos(ti), 1, Math.sin(ti)), 0);
                 }
 
-                if (ti >= Math.PI * 2 + startingAngle) cancel();
+                if (ti >= Math.PI * 2 + startingAngle) task.cancel();
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 }

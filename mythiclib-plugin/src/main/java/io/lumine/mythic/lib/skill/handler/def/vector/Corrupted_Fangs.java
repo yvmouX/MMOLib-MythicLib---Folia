@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,7 +68,7 @@ public class Corrupted_Fangs extends SkillHandler<VectorSkillResult> {
             this.fangAmount = (int) skillMetadata.getParameter("fangs");
             this.dir = normalize(dir.setY(0)).multiply(2);
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(loc, 0, 1);
         }
 
         private Vector normalize(Vector vec) {
@@ -78,8 +78,8 @@ public class Corrupted_Fangs extends SkillHandler<VectorSkillResult> {
         }
 
         @Override
-        protected @Nullable BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected @Nullable UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 double ti = 0;
 
                 public void run() {

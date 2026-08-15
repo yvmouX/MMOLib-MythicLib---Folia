@@ -43,7 +43,7 @@ public abstract class DamageParticleCap<E, P> {
 
         // Runs on the next tick
         // To avoid problems of counters that don't go down, just set back to 0
-        Bukkit.getScheduler().runTaskAsynchronously(MythicLib.plugin, () -> playerData.damageParticleCount.set(0));
+        MythicLib.getScheduler().runAsync(MythicLib.plugin, () -> playerData.damageParticleCount.set(0));
 
         // Set the new particle amount if needed
         if (effective != originalAmount) this.writeNewAmount(packet, effective);

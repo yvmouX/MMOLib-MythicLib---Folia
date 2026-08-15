@@ -10,7 +10,7 @@ import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.util.configobject.ConfigObject;
 import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -80,8 +80,10 @@ public class ParabolaMechanic extends Mechanic {
         final double a = (2 * dir.getY() - 4 * height) / (xzLength * xzLength);
         final double b = xzLength - dir.getY() / (a * xzLength);
 
-        new BukkitRunnable() {
+        new Runnable() {
             double x = 0;
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(source, this, 0, 1);
 
             private static final double DT = .05;
 
@@ -96,7 +98,7 @@ public class ParabolaMechanic extends Mechanic {
                 // Distance traveled along the x axis
                 final double dx = speed * DT;
                 if (x >= xzLength) {
-                    cancel();
+                    task.cancel();
                     return;
                 }
 
@@ -118,7 +120,7 @@ public class ParabolaMechanic extends Mechanic {
                     cast.cast(meta.clone(source, loc_i, null));
                 }
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 
     /**

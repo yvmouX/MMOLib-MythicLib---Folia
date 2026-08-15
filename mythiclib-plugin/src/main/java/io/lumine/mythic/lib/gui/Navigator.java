@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.scheduler.BukkitTask;
+import cn.yvmou.ylib.scheduler.UniversalTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +43,7 @@ public class Navigator implements Listener {
     @Nullable
     private Inventory lastBukkitOpened;
     @Nullable
-    public BukkitTask backgroundTask;
+    public UniversalTask backgroundTask;
     private boolean canClose = true, closed = true;
 
     /**
@@ -212,7 +212,7 @@ public class Navigator implements Listener {
 
         Validate.isTrue(backgroundTask == null, "Background task already running");
 
-        backgroundTask = Bukkit.getScheduler().runTaskTimer(MythicLib.plugin, () -> {
+        backgroundTask = MythicLib.getScheduler().runTimer(MythicLib.plugin, () -> {
             final var opened = Objects.requireNonNull(VersionUtils.getOpen(player).getTopInventory());
             final var tracked = getLastBukkitOpened();
 
@@ -246,7 +246,7 @@ public class Navigator implements Listener {
         else {
             onHold = true;
             final var upmost = openedInventories.peek();
-            Bukkit.getScheduler().runTaskLater(MythicLib.plugin, this::openLast, upmost.getCloseTimeOut());
+            MythicLib.getScheduler().runLater(MythicLib.plugin, this::openLast, upmost.getCloseTimeOut());
         }
     }
 

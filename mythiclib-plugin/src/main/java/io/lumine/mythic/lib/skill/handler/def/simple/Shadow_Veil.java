@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +40,7 @@ public class Shadow_Veil extends SkillHandler<SimpleSkillResult> {
         Player caster = skillMeta.getCaster().getPlayer();
 
         caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_ENDERMAN_TELEPORT, 3, 0);
-        for (Player online : Bukkit.getOnlinePlayers())
+        for (Player online : MythicLib.getOnlinePlayers())
             online.hidePlayer(MythicLib.plugin, caster);
 
         // Clears the target of any entity around the player
@@ -70,12 +70,12 @@ public class Shadow_Veil extends SkillHandler<SimpleSkillResult> {
             this.loc = player.getLocation();
             this.hitsLeft = hitsLeft;
 
-            runTask(r -> r.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(player, 0, 1);
         }
 
         @Override
-        protected @Nullable BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected @Nullable UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 double ti = 0;
                 double y = 0;
 
@@ -104,7 +104,7 @@ public class Shadow_Veil extends SkillHandler<SimpleSkillResult> {
             player.getWorld().spawnParticle(VParticle.LARGE_SMOKE.get(), player.getLocation().add(0, 1, 0), 32, 0, 0, 0, .13);
             player.getWorld().playSound(player.getLocation(), Sounds.ENTITY_ENDERMAN_TELEPORT, 3, 0);
 
-            for (Player online : Bukkit.getOnlinePlayers())
+            for (Player online : MythicLib.getOnlinePlayers())
                 online.showPlayer(MythicLib.plugin, player);
         }
 

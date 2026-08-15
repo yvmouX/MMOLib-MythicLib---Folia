@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.version;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -33,7 +35,7 @@ public class SpigotPlugin {
      * The request is executed asynchronously as not to block the main thread.
      */
     public void checkForUpdate() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        MythicLib.getScheduler().runAsync(plugin, () -> {
             try {
                 final var connection = (HttpsURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=" + id).openConnection();
                 connection.setRequestMethod("GET");
@@ -53,7 +55,7 @@ public class SpigotPlugin {
              * join only if the corresponding option is enabled
              */
             if (plugin.getConfig().getBoolean("update-notify"))
-                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getPluginManager().registerEvents(new Listener() {
+                MythicLib.getScheduler().runTask(plugin, () -> Bukkit.getPluginManager().registerEvents(new Listener() {
                     @EventHandler(priority = EventPriority.MONITOR)
                     public void onPlayerJoin(PlayerJoinEvent event) {
                         Player player = event.getPlayer();

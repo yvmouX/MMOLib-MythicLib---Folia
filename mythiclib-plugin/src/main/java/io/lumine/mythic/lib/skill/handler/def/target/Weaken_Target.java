@@ -21,7 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -58,19 +58,21 @@ public class Weaken_Target extends SkillHandler<TargetSkillResult> implements Li
     }
 
     private void playParticleEffect(Entity target, double duration) {
-        new BukkitRunnable() {
+        new Runnable() {
             final long expire = System.currentTimeMillis() + (long) (duration * 1000);
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(target, this, 0, null, 20);
 
             public void run() {
                 if (!markedEntities.containsKey(target.getUniqueId()) || expire < System.currentTimeMillis()) {
-                    cancel();
+                    task.cancel();
                     return;
                 }
 
                 for (double j = 0; j < Math.PI * 2; j += Math.PI / 18)
                     target.getWorld().spawnParticle(VParticle.SMOKE.get(), target.getLocation().clone().add(Math.cos(j) * .7, .1, Math.sin(j) * .7), 0);
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 20);
+        };
     }
 
     @EventHandler
@@ -100,8 +102,10 @@ public class Weaken_Target extends SkillHandler<TargetSkillResult> implements Li
     }
 
     private void playWeakenEffect(Location loc) {
-        new BukkitRunnable() {
+        new Runnable() {
             double y = 0;
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(loc, this, 0, 1);
 
             public void run() {
                 for (int j = 0; j < 3; j++) {
@@ -113,8 +117,8 @@ public class Weaken_Target extends SkillHandler<TargetSkillResult> implements Li
                                         Math.sin(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5),
                                 1, new Particle.DustOptions(Color.BLACK, 1));
                 }
-                if (y > 3) cancel();
+                if (y > 3) task.cancel();
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 }

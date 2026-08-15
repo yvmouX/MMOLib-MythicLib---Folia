@@ -14,7 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +44,7 @@ public class Arcane_Hail extends SkillHandler<LocationSkillResult> {
         double duration = skillMeta.getParameter("duration") * 10;
         double radius = skillMeta.getParameter("radius");
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 2, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 2, handler -> new UniversalRunnable() {
             int j = 0;
 
             public void run() {

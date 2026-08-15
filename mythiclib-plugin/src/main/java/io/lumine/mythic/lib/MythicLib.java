@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib;
 
+import cn.yvmou.ylib.YLib;
+import cn.yvmou.ylib.scheduler.UniversalScheduler;
 import com.google.gson.Gson;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicCraftingManager;
 import io.lumine.mythic.lib.api.crafting.uifilters.MythicItemUIFilter;
@@ -55,16 +57,31 @@ import io.lumine.mythic.lib.version.ServerVersion;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.ServicePriority;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 
 public class MythicLib extends MMOPlugin {
     public static MythicLib plugin;
+
+    /**
+     * Thread-safe snapshot of the online players, maintained via join/quit
+     * events. Must be used instead of {@link Bukkit#getOnlinePlayers()} on
+     * threads other than the main thread (Folia throws there).
+     */
+    private static final List<Player> ONLINE_PLAYERS = new CopyOnWriteArrayList<>();
 
     private final DamageManager damageManager = new DamageManager(this);
     private final EntityManager entityManager = new EntityManager(this);
@@ -118,6 +135,30 @@ public class MythicLib extends MMOPlugin {
 
     @Override
     public void onEnable() {
+        try {
+            YLib.init(this);
+        } catch (Exception exception) {
+            getLogger().log(Level.SEVERE, "Failed to initialize YLib: " + exception.getMessage());
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        // Thread-safe snapshot of online players. On Folia Bukkit#getOnlinePlayers
+        // can only be called on the main thread, so code running on other
+        // threads must use this snapshot instead.
+        ONLINE_PLAYERS.addAll(Bukkit.getOnlinePlayers());
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onJoin(PlayerJoinEvent event) {
+                ONLINE_PLAYERS.add(event.getPlayer());
+            }
+
+            @EventHandler
+            public void onQuit(PlayerQuitEvent event) {
+                ONLINE_PLAYERS.remove(event.getPlayer());
+            }
+        }, this);
+
         new Metrics(this);
         gson = MythicLibGson.build();
         new SpigotPlugin(90306, this).checkForUpdate();
@@ -294,13 +335,7 @@ public class MythicLib extends MMOPlugin {
         getProfileHandler().onStartup();
 
         // Periodically flush temporary player data (1 hour)
-        Bukkit.getScheduler().runTaskTimer(this, MMOPlayerData::flushOfflinePlayerData, 20 * 60 * 60, 20 * 60 * 60);
-
-        // Periodic tick for active players
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> MMOPlayerData.forEachPlaying(MMOPlayerData::tickPlaying), 5 * 20, 20);
-
-        // Other stuff
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> MMOPlayerData.forEach(MMOPlayerData::tickOnline), 5 * 20, 5 * 20);
+        getScheduler().runTimer(this, MMOPlayerData::flushOfflinePlayerData, 20 * 60 * 60, 20 * 60 * 60);
     }
 
     public void reload() {
@@ -332,6 +367,33 @@ public class MythicLib extends MMOPlugin {
 
     public static MythicLib inst() {
         return plugin;
+    }
+
+    /**
+     * YLib platform-agnostic scheduler. Works on Folia, Paper and Spigot.
+     */
+    @NotNull
+    public static UniversalScheduler getScheduler() {
+        return YLib.getYLib().getScheduler();
+    }
+
+    /**
+     * Thread-safe view of the currently online players. Unlike
+     * {@link Bukkit#getOnlinePlayers()}, this may be called from any thread.
+     */
+    @NotNull
+    public static List<Player> getOnlinePlayers() {
+        return ONLINE_PLAYERS;
+    }
+
+    /**
+     * Teleports an entity across platforms. On Folia the teleport is performed
+     * on the entity's own region thread; on Spigot/Paper it is performed
+     * instantly.
+     */
+    public static void teleport(@NotNull Entity entity, @NotNull Location location) {
+        if (getScheduler().isFolia()) getScheduler().teleportAsync(entity, location);
+        else entity.teleport(location);
     }
 
     public Gson getGson() {

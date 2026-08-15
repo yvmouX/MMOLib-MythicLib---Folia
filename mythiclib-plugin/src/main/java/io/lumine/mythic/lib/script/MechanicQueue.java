@@ -59,7 +59,7 @@ public class MechanicQueue {
 
             // Schedule delayed execution of next mechanic
             if (mechanic instanceof DelayMechanic) {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(MythicLib.plugin, this::next, ((DelayMechanic) mechanic).getDelay(meta));
+                MythicLib.getScheduler().runLater(MythicLib.plugin, this::next, ((DelayMechanic) mechanic).getDelay(meta));
                 return false;
             }
 

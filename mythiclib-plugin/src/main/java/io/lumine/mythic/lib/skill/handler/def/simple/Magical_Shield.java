@@ -16,7 +16,7 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,14 +55,14 @@ public class Magical_Shield extends SkillHandler<SimpleSkillResult> {
 
             caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_ENDERMAN_TELEPORT, 3, 0);
 
-            runTask(runnable -> runnable.runTaskTimer(MythicLib.plugin, 0, 3));
+            runTask(playerData.getPlayer(), 0, 3);
 
             closeAfter((long) (duration * 20));
         }
 
         @Override
-        protected @Nullable BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected @Nullable UniversalRunnable newTask() {
+            return new UniversalRunnable() {
                 @Override
                 public void run() {
                     for (double j = 0; j < Math.PI / 2; j += Math.PI / (28 + RANDOM.nextInt(5)))

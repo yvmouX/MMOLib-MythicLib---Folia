@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -65,12 +65,12 @@ public class AdventureUtils {
             runnable.run();
             return;
         }
-        new BukkitRunnable() {
+        new UniversalRunnable() {
             @Override
             public void run() {
                 runnable.run();
             }
-        }.runTaskAsynchronously(MythicLib.plugin);
+        }.runAsync(MythicLib.plugin);
     }
 
     /**
@@ -84,7 +84,7 @@ public class AdventureUtils {
         if (!Bukkit.isPrimaryThread())
             return CompletableFuture.completedFuture(supplier.get());
         CompletableFuture<U> future = new CompletableFuture<>();
-        new BukkitRunnable() {
+        new UniversalRunnable() {
             @Override
             public void run() {
                 try {
@@ -93,7 +93,7 @@ public class AdventureUtils {
                     future.completeExceptionally(e);
                 }
             }
-        }.runTaskAsynchronously(MythicLib.plugin);
+        }.runAsync(MythicLib.plugin);
         return future;
     }
 

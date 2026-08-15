@@ -10,7 +10,7 @@ import io.lumine.mythic.lib.util.TemporaryHandler;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 
 @BuiltinSkillHandler(mods = {"heal", "duration"})
@@ -28,7 +28,7 @@ public class Regen_Ally extends SkillHandler<TargetSkillResult> {
     public void whenCast(TargetSkillResult result, SkillMetadata skillMeta) {
         LivingEntity target = result.getTarget();
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new BukkitRunnable() {
+        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
             final double duration = Math.min(skillMeta.getParameter("duration"), 60) * 20;
             final double hps = skillMeta.getParameter("heal") / duration * 4;
             double ti = 0;

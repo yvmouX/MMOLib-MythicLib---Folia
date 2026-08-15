@@ -39,9 +39,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 public class SkillTriggers implements Listener {
-    public SkillTriggers() {
-        Bukkit.getScheduler().runTaskTimer(MythicLib.plugin, () -> MMOPlayerData.forEachPlaying(online -> online.getPassiveSkillMap().tickTimerSkills()), 0, 1);
-    }
 
     @EventHandler
     public void killEntity(PlayerKillEntityEvent event) {

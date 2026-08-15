@@ -27,7 +27,7 @@ public class NoProfileHandler implements ProfileHandler {
     @Override
     public void onStartup() {
         // TODO improve implementation
-        Bukkit.getScheduler().runTaskLater(MythicLib.plugin, () -> {
+        MythicLib.getScheduler().runLater(MythicLib.plugin, () -> {
             MMOPlayerData.getLoaded().forEach(data -> data.chooseProfile(null, SessionUpdateReason.LOGIN));
         }, 20);
     }

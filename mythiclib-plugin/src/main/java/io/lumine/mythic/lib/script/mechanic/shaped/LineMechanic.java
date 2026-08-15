@@ -9,7 +9,7 @@ import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.util.configobject.ConfigObject;
 import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -64,7 +64,9 @@ public class LineMechanic extends Mechanic {
         }
 
         // Draws line in time
-        new BukkitRunnable() {
+        new Runnable() {
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(source, this, 0, 1);
 
             // Distance counter
             double dist = 0;
@@ -72,7 +74,7 @@ public class LineMechanic extends Mechanic {
             public void run() {
                 for (int i = 0; i < pointsPerTick; i++) {
                     if (dist > maxDist) {
-                        cancel();
+                        task.cancel();
                         if (onEnd != null) onEnd.cast(meta.clone(target.clone()));
                         return;
                     }
@@ -82,6 +84,6 @@ public class LineMechanic extends Mechanic {
                     dist += step;
                 }
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 }

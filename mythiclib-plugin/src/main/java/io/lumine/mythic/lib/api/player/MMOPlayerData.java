@@ -28,6 +28,7 @@ import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import io.lumine.mythic.lib.util.TemporaryHandler;
 import io.lumine.mythic.lib.util.lang3.Validate;
+import cn.yvmou.ylib.scheduler.UniversalTask;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -157,9 +158,12 @@ public class MMOPlayerData {
         if (this.hasProfileSession())
             this.getProfileSession().initializeClosing(SessionUpdateReason.LOG_OUT);
 
+        // Stop the per-player tick tasks
+        stopTicking();
+
         // Only clear the Player instance a few ticks later
         // TODO improve this, only clear once the session has been closed
-        Bukkit.getScheduler().runTaskLater(MythicLib.plugin, () -> {
+        MythicLib.getScheduler().runLater(MythicLib.plugin, () -> {
 
             // Ignore if player logged in again
             if (this.isOnline()) return;
@@ -181,6 +185,9 @@ public class MMOPlayerData {
         this.player = player;
         this.lastLogActivity = System.currentTimeMillis();
         this.lastPlayerName = player.getName();
+
+        // Start the per-player tick tasks
+        startTicking(player);
     }
 
     //endregion
@@ -554,6 +561,43 @@ public class MMOPlayerData {
         // [Safeguard]
         if (hasProfileSession() && getProfileSession().isGhost()) {
             MythicLib.plugin.getLogger().log(Level.SEVERE, "Ghost session detected for player " + getPlayerName() + " (" + getUniqueId() + "). Session dump: " + getProfileSession());
+        }
+    }
+
+    /**
+     * Repeating tasks ticking this player's data, scoped to the player entity
+     * so that they also work on Folia.
+     */
+    @Nullable
+    private UniversalTask playingTickTask, onlineTickTask, passiveTickTask;
+
+    private void startTicking(@NotNull Player player) {
+        if (playingTickTask == null || playingTickTask.isCancelled())
+            playingTickTask = MythicLib.getScheduler().runTimer(player, () -> {
+                if (isPlaying()) tickPlaying();
+            }, 5 * 20, null, 20);
+
+        if (onlineTickTask == null || onlineTickTask.isCancelled())
+            onlineTickTask = MythicLib.getScheduler().runTimer(player, this::tickOnline, 5 * 20, null, 5 * 20);
+
+        if (passiveTickTask == null || passiveTickTask.isCancelled())
+            passiveTickTask = MythicLib.getScheduler().runTimer(player, () -> {
+                if (isPlaying()) getPassiveSkillMap().tickTimerSkills();
+            }, 0, null, 1);
+    }
+
+    private void stopTicking() {
+        if (playingTickTask != null) {
+            playingTickTask.cancel();
+            playingTickTask = null;
+        }
+        if (onlineTickTask != null) {
+            onlineTickTask.cancel();
+            onlineTickTask = null;
+        }
+        if (passiveTickTask != null) {
+            passiveTickTask.cancel();
+            passiveTickTask = null;
         }
     }
 

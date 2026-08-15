@@ -18,7 +18,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,12 +59,12 @@ public class Human_Shield extends SkillHandler<TargetSkillResult> {
             this.duration = duration * 20;
             minimumHealthPercentage = low / 100;
 
-            runTask(r -> r.runTaskTimer(MythicLib.plugin, 0, 1));
+            runTask(target, 0, 1);
         }
 
         @Override
-        protected @Nullable BukkitRunnable newTask() {
-            return new BukkitRunnable() {
+        protected @Nullable UniversalRunnable newTask() {
+            return new UniversalRunnable() {
 
                 @Override
                 public void run() {

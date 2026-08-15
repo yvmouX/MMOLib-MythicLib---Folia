@@ -11,7 +11,7 @@ import io.lumine.mythic.lib.version.VParticle;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,11 +43,13 @@ public class Starfall extends SkillHandler<TargetSkillResult> {
     }
 
     private void playParticleEffect(Location source) {
-        new BukkitRunnable() {
+        new Runnable() {
             final double ran = Math.random() * Math.PI * 2;
             final Location origin = source.add(Math.cos(ran) * 3, 6, Math.sin(ran) * 3);
             final Vector vec = source.add(0, .65, 0).toVector().subtract(origin.toVector()).multiply(.05);
             double ti = 0;
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(origin, this, 0, 1);
 
             public void run() {
                 origin.getWorld().playSound(origin, Sounds.BLOCK_NOTE_BLOCK_HAT, 2, 2);
@@ -59,10 +61,10 @@ public class Starfall extends SkillHandler<TargetSkillResult> {
                     if (ti >= 1) {
                         origin.getWorld().spawnParticle(VParticle.FIREWORK.get(), origin, 24, 0, 0, 0, .12);
                         origin.getWorld().playSound(origin, Sounds.ENTITY_FIREWORK_ROCKET_BLAST, 1, 2);
-                        cancel();
+                        task.cancel();
                     }
                 }
             }
-        }.runTaskTimer(MythicLib.plugin, 0, 1);
+        };
     }
 }

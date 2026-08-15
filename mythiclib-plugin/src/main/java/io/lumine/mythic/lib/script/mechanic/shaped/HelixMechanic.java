@@ -12,7 +12,7 @@ import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.util.configobject.ConfigObject;
 import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
+import cn.yvmou.ylib.scheduler.UniversalRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +65,9 @@ public class HelixMechanic extends Mechanic {
         Validate.isTrue(dir.lengthSquared() > 0, "Direction cannot be zero");
 
         final double yaw_i = UtilityMethods.getYawPitch(dir)[0] - yawSpread / 2;
-        new BukkitRunnable() {
+        new Runnable() {
+
+            final cn.yvmou.ylib.scheduler.UniversalTask task = MythicLib.getScheduler().runTimer(source, this, 0, timeInterval);
 
             // Tick counter
             int counter = 0;
@@ -77,7 +79,7 @@ public class HelixMechanic extends Mechanic {
                      * code will makethe runnable loop forever.
                      */
                     if (counter++ >= points) {
-                        cancel();
+                        task.cancel();
                         return;
                     }
 
@@ -92,6 +94,6 @@ public class HelixMechanic extends Mechanic {
                     }
                 }
             }
-        }.runTaskTimer(MythicLib.plugin, 0, timeInterval);
+        };
     }
 }
