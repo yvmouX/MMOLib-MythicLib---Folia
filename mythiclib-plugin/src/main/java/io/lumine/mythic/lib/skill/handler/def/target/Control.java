@@ -36,7 +36,7 @@ public class Control extends SkillHandler<TargetSkillResult> {
     public void whenCast(TargetSkillResult result, SkillMetadata skillMeta) {
         Player caster = skillMeta.getCaster().getPlayer();
         caster.getWorld().playSound(caster.getLocation(), Sounds.BLOCK_END_PORTAL_FRAME_FILL, 1, 1);
-        result.getTarget().addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), 20 * 2, 0));
+        MythicLib.applyOn(result.getTarget(), () -> result.getTarget().addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), 20 * 2, 0)));
         new Handler(skillMeta.getCaster(), result.getTarget(), skillMeta.getParameter("knockback") / 100, skillMeta.getParameter("duration"));
     }
 

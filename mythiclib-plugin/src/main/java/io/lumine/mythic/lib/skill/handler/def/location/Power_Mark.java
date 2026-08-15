@@ -95,9 +95,10 @@ public class Power_Mark extends SkillHandler<LocationSkillResult> {
 
                         for (Entity entity : UtilityMethods.getNearbyChunkEntities(loc))
                             if (entity.getLocation().distanceSquared(loc) < 25 && UtilityMethods.canTarget(caster.getPlayer(), entity)) {
-                                ((LivingEntity) entity).addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), (int) (stun * 20), 10, false, false));
+                                final Vector knockbackVelocity = format(entity.getLocation().subtract(loc).toVector().setY(0)).setY(.3);
+                                MythicLib.applyOn(entity, () -> ((LivingEntity) entity).addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), (int) (stun * 20), 10, false, false)));
                                 caster.attack((LivingEntity) entity, accumulate, damageTypes);
-                                entity.setVelocity(format(entity.getLocation().subtract(loc).toVector().setY(0)).setY(.3));
+                                MythicLib.applyOn(entity, () -> entity.setVelocity(knockbackVelocity));
                             }
                         return;
                     }

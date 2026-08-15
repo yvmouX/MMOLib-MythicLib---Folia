@@ -70,7 +70,7 @@ public class Fireball extends SkillHandler<SimpleSkillResult> {
                     loc.getWorld().spawnParticle(Particle.LAVA, loc, 8);
                     loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);
                     loc.getWorld().playSound(loc, Sounds.ENTITY_BLAZE_HURT, 2, .7f);
-                    target.setFireTicks((int) (target.getFireTicks() + skillMeta.getParameter("ignite") * 20));
+                    MythicLib.applyOn(target, () -> target.setFireTicks((int) (target.getFireTicks() + skillMeta.getParameter("ignite") * 20)));
                     double damage = skillMeta.getParameter("damage");
                     skillMeta.getCaster().attack(target, damage, damageTypes);
 

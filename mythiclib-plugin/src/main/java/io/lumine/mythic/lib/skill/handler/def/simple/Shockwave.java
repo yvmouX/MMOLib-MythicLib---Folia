@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.simple;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -59,8 +60,10 @@ public class Shockwave extends SkillHandler<SimpleSkillResult> {
                 for (Entity ent : UtilityMethods.getNearbyChunkEntities(loc))
                     if (ent.getLocation().distanceSquared(loc) < 1.1 * 1.1 && UtilityMethods.canTarget(caster, ent) && !hit.contains(ent.getEntityId())) {
                         hit.add(ent.getEntityId());
-                        ent.playEffect(EntityEffect.HURT);
-                        ent.setVelocity(ent.getVelocity().setY(.4 * knockUp));
+                        MythicLib.applyOn(ent, () -> {
+                            ent.playEffect(EntityEffect.HURT);
+                            ent.setVelocity(ent.getVelocity().setY(.4 * knockUp));
+                        });
                     }
             }
         });

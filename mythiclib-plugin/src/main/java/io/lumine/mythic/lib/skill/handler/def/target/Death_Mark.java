@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.target;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -39,7 +40,7 @@ public class Death_Mark extends SkillHandler<TargetSkillResult> {
         double duration = skillMeta.getParameter("duration") * 20;
         double dps = skillMeta.getParameter("damage") / duration * 20;
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
+        TemporaryHandler.task(skillMeta.getCaster().getData(), target, 0, 1, handler -> new UniversalRunnable() {
             int ti = 0;
 
             public void run() {
@@ -56,7 +57,9 @@ public class Death_Mark extends SkillHandler<TargetSkillResult> {
         });
 
         target.getWorld().playSound(target.getLocation(), Sounds.ENTITY_BLAZE_HURT, 1, 2);
-        target.removePotionEffect(VPotionEffectType.SLOWNESS.get());
-        target.addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), (int) duration, (int) skillMeta.getParameter("amplifier")));
+        MythicLib.applyOn(target, () -> {
+            target.removePotionEffect(VPotionEffectType.SLOWNESS.get());
+            target.addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), (int) duration, (int) skillMeta.getParameter("amplifier")));
+        });
     }
 }

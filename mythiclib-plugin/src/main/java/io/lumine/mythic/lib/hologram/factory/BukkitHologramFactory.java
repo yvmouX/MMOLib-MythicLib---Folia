@@ -32,8 +32,12 @@ public class BukkitHologramFactory implements HologramFactory /*, Listener*/ {
     private void clearPreviousEntities() {
         // Safeguard in case of server crash
         for (var world : Bukkit.getWorlds())
-            for (var display : world.getEntitiesByClasses(TextDisplay.class))
-                if (display.getPersistentDataContainer().has(PDC_KEY)) display.remove();
+            for (var display : world.getEntitiesByClasses(TextDisplay.class)) {
+                final org.bukkit.entity.Entity toRemove = display;
+                MythicLib.applyOn(toRemove, () -> {
+                    if (toRemove.getPersistentDataContainer().has(PDC_KEY)) toRemove.remove();
+                });
+            }
     }
 
     @NotNull

@@ -96,7 +96,7 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> {
 
         @Override
         public void onClose() {
-            bullet.remove();
+            if (!bullet.isDead()) MythicLib.applyOn(bullet, bullet::remove);
         }
 
         @EventHandler

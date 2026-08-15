@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.script.mechanic.offense;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.script.mechanic.MechanicMetadata;
 import io.lumine.mythic.lib.script.mechanic.type.TargetMechanic;
 import io.lumine.mythic.lib.script.util.expression.numeric.NumericExpression;
@@ -28,6 +29,7 @@ public class SetOnFireMechanic extends TargetMechanic {
         else if (max) ticks = Math.max(ticks, target.getFireTicks());
         else if (min) ticks = Math.min(ticks, target.getFireTicks());
 
-        target.setFireTicks(ticks);
+        final int finalTicks = ticks;
+        MythicLib.applyOn(target, () -> target.setFireTicks(finalTicks));
     }
 }

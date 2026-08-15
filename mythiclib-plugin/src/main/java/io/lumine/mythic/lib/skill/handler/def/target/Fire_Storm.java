@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.target;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -61,7 +62,7 @@ public class Fire_Storm extends SkillHandler<TargetSkillResult> {
                     target.getWorld().playSound(target.getLocation(), Sounds.ENTITY_FIREWORK_ROCKET_TWINKLE, 1, 2);
                     target.getWorld().spawnParticle(VParticle.SMOKE.get(), target.getLocation().add(0, target.getHeight() / 2, 0), 8, 0, 0, 0, .15);
                     skillMeta.getCaster().attack(target, damage, damageTypes);
-                    target.setFireTicks(ignite);
+                    MythicLib.applyOn(target, () -> target.setFireTicks(ignite));
 
                 }, 2, Particle.FLAME);
             }

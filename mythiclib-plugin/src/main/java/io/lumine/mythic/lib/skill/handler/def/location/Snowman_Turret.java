@@ -42,7 +42,7 @@ public class Snowman_Turret extends SkillHandler<LocationSkillResult> {
     public void whenCast(LocationSkillResult result, SkillMetadata skillMeta) {
         Location loc = result.getTarget();
 
-        new Handler(skillMeta, loc);
+        MythicLib.applyOnLocation(loc, () -> new Handler(skillMeta, loc));
         loc.getWorld().playSound(loc, Sounds.ENTITY_ENDERMAN_TELEPORT, 2, 1);
     }
 

@@ -35,8 +35,8 @@ public class Slow extends SkillHandler<TargetSkillResult> {
         playParticleEffect(target.getLocation());
         target.getWorld().playSound(target.getLocation(), Sounds.ENTITY_LLAMA_ANGRY, 1, 2);
 
-        target.addPotionEffect(
-                new PotionEffect(VPotionEffectType.SLOWNESS.get(), (int) (skillMeta.getParameter("duration") * 20), (int) skillMeta.getParameter("amplifier")));
+        MythicLib.applyOn(target, () -> target.addPotionEffect(
+                new PotionEffect(VPotionEffectType.SLOWNESS.get(), (int) (skillMeta.getParameter("duration") * 20), (int) skillMeta.getParameter("amplifier"))));
     }
 
     private void playParticleEffect(Location loc) {

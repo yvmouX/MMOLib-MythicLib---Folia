@@ -51,7 +51,9 @@ public class Tasks {
      * next server tick.
      */
     public static void runSync(@NotNull Plugin plugin, @NotNull Runnable runnable) {
-        if (Bukkit.isPrimaryThread()) runnable.run();
+        // On Folia, never execute directly on the main thread: region-owned
+        // state would be accessed off its owning thread. Always defer instead.
+        if (!MythicLib.getScheduler().isFolia() && Bukkit.isPrimaryThread()) runnable.run();
         else MythicLib.getScheduler().runTask(plugin, runnable);
     }
 

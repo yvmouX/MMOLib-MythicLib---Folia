@@ -213,16 +213,19 @@ public class Navigator implements Listener {
         Validate.isTrue(backgroundTask == null, "Background task already running");
 
         backgroundTask = MythicLib.getScheduler().runTimer(MythicLib.plugin, () -> {
-            final var opened = Objects.requireNonNull(VersionUtils.getOpen(player).getTopInventory());
-            final var tracked = getLastBukkitOpened();
+            // Inventory mutations must happen on the player's own thread (Folia)
+            MythicLib.getScheduler().runTask(player, () -> {
+                final var opened = Objects.requireNonNull(VersionUtils.getOpen(player).getTopInventory());
+                final var tracked = getLastBukkitOpened();
 
-            // Should be the same physical objects
-            if (opened != tracked) {
-                Navigator.this.haltBackgroundTask();
-                throw new RuntimeException("Failed at keeping track of opened inventory");
-            }
+                // Should be the same physical objects
+                if (opened != tracked) {
+                    Navigator.this.haltBackgroundTask();
+                    throw new RuntimeException("Failed at keeping track of opened inventory");
+                }
 
-            backgroundRunnable.accept(tracked);
+                backgroundRunnable.accept(tracked);
+            });
         }, nextOpened.getBackgroundRunnablePeriod(), nextOpened.getBackgroundRunnablePeriod());
     }
 
@@ -246,7 +249,7 @@ public class Navigator implements Listener {
         else {
             onHold = true;
             final var upmost = openedInventories.peek();
-            MythicLib.getScheduler().runLater(MythicLib.plugin, this::openLast, upmost.getCloseTimeOut());
+            MythicLib.getScheduler().runLater(player, this::openLast, upmost.getCloseTimeOut());
         }
     }
 

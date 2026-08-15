@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.skill.handler.def.vector;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -59,7 +61,8 @@ public class Heavy_Charge extends SkillHandler<VectorSkillResult> {
                     if (UtilityMethods.canTarget(caster, target)) {
                         caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1, 1);
                         caster.getWorld().spawnParticle(VParticle.LARGE_EXPLOSION.get(), target.getLocation().add(0, 1, 0), 0);
-                        target.setVelocity(caster.getVelocity().setY(0.3).multiply(1.7 * knockback));
+                        final Vector knockbackVelocity = caster.getVelocity().setY(0.3).multiply(1.7 * knockback);
+                        MythicLib.applyOn(target, () -> target.setVelocity(knockbackVelocity));
                         caster.setVelocity(caster.getVelocity().setX(0).setY(0).setZ(0));
                         skillMeta.getCaster().attack((LivingEntity) target, skillMeta.getParameter("damage"), damageTypes);
                         handler.close();

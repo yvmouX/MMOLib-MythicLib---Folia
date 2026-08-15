@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.simple;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -50,7 +51,7 @@ public class Circular_Slash extends SkillHandler<SimpleSkillResult> {
                 Vector v2 = caster.getLocation().toVector();
                 double y = .5;
                 Vector v3 = v1.subtract(v2).multiply(.5 * knockback).setY(knockback == 0 ? 0 : y);
-                entity.setVelocity(v3);
+                MythicLib.applyOn(entity, () -> entity.setVelocity(v3));
             }
 
         caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_PLAYER_ATTACK_SWEEP, 2, .5f);

@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.skill.handler.def.target;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -59,7 +61,7 @@ public class Magma_Fissure extends SkillHandler<TargetSkillResult> {
 
                 if (target.getLocation().distanceSquared(loc) < 1) {
                     loc.getWorld().playSound(loc, Sounds.ENTITY_BLAZE_HURT, 2, 1);
-                    target.setFireTicks((int) (target.getFireTicks() + skillMeta.getParameter("ignite") * 20));
+                    MythicLib.applyOn(target, () -> target.setFireTicks((int) (target.getFireTicks() + skillMeta.getParameter("ignite") * 20)));
                     skillMeta.getCaster().attack(target, skillMeta.getParameter("damage"), damageTypes);
                     handler.close();
                 }

@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.location;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -58,8 +59,10 @@ public class Corrupt extends SkillHandler<LocationSkillResult> {
         for (Entity entity : UtilityMethods.getNearbyChunkEntities(loc))
             if (UtilityMethods.canTarget(caster, entity) && entity.getLocation().distanceSquared(loc) <= radius * radius) {
                 skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
-                ((LivingEntity) entity).removePotionEffect(PotionEffectType.WITHER);
-                ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) (duration * 20), (int) amplifier));
+                MythicLib.applyOn(entity, () -> {
+                    ((LivingEntity) entity).removePotionEffect(PotionEffectType.WITHER);
+                    ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) (duration * 20), (int) amplifier));
+                });
             }
     }
 }

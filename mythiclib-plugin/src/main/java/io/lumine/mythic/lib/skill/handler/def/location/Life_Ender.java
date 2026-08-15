@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.location;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -74,7 +75,8 @@ public class Life_Ender extends SkillHandler<LocationSkillResult> {
                     for (Entity entity : UtilityMethods.getNearbyChunkEntities(source))
                         if (entity.getLocation().distanceSquared(source) < radius * radius && UtilityMethods.canTarget(caster, entity)) {
                             skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
-                            entity.setVelocity(entity.getLocation().subtract(source).toVector().setY(.75).normalize().multiply(knockback));
+                            final Vector knockbackVelocity = entity.getLocation().subtract(source).toVector().setY(.75).normalize().multiply(knockback);
+                            MythicLib.applyOn(entity, () -> entity.setVelocity(knockbackVelocity));
                         }
 
                     handler.close();

@@ -68,7 +68,7 @@ public class Throw_Up extends SkillHandler<SimpleSkillResult> {
                 loc.getWorld().playSound(loc, Sounds.ENTITY_ZOMBIE_HURT, 1, 1);
 
                 NoClipItem item = new NoClipItem(caster.getLocation().add(0, 1.2, 0), new ItemStack(Material.ROTTEN_FLESH));
-                MythicLib.getScheduler().runLater(MythicLib.plugin, item::close, 40);
+                MythicLib.getScheduler().runLater(item.getEntity(), item::close, 40);
                 item.getEntity().setVelocity(loc.getDirection().multiply(.8));
                 caster.getWorld().spawnParticle(VParticle.LARGE_SMOKE.get(), caster.getLocation().add(0, 1.2, 0), 0, loc.getDirection().getX(), loc.getDirection().getY(), loc.getDirection().getZ(), 1);
             }

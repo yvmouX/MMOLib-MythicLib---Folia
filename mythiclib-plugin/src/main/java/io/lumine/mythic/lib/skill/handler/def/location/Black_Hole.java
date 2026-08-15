@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.location;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -59,8 +60,10 @@ public class Black_Hole extends SkillHandler<LocationSkillResult> {
                 }
 
                 for (Entity entity : UtilityMethods.getNearbyChunkEntities(loc))
-                    if (entity.getLocation().distanceSquared(loc) < Math.pow(radius, 2) && UtilityMethods.canTarget(caster, entity))
-                        entity.setVelocity(UtilityMethods.safeNormalize(loc.clone().subtract(entity.getLocation()).toVector()).multiply(.5));
+                    if (entity.getLocation().distanceSquared(loc) < Math.pow(radius, 2) && UtilityMethods.canTarget(caster, entity)) {
+                        final Vector velocity = UtilityMethods.safeNormalize(loc.clone().subtract(entity.getLocation()).toVector()).multiply(.5);
+                        MythicLib.applyOn(entity, () -> entity.setVelocity(velocity));
+                    }
             }
         });
     }

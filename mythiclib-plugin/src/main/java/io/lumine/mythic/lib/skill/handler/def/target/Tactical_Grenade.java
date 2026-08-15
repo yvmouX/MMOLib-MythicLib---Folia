@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.skill.handler.def.target;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -76,7 +78,7 @@ public class Tactical_Grenade extends SkillHandler<TargetSkillResult> {
                         else hit.add(entity.getEntityId());
 
                         skillMeta.getCaster().attack((LivingEntity) entity, skillMeta.getParameter("damage"), damageTypes);
-                        entity.setVelocity(entity.getVelocity().add(offsetVector(knockup)));
+                        MythicLib.applyOn(entity, () -> entity.setVelocity(entity.getVelocity().add(offsetVector(knockup))));
                     }
             }
         });

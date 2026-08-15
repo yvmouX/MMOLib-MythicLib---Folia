@@ -34,8 +34,8 @@ public class Wither extends SkillHandler<TargetSkillResult> {
 
         playParticleEffect(target.getLocation());
         target.getWorld().playSound(target.getLocation(), Sounds.ENTITY_WITHER_SHOOT, 2, 2);
-        target.addPotionEffect(
-                new PotionEffect(PotionEffectType.WITHER, (int) (skillMeta.getParameter("duration") * 20), (int) skillMeta.getParameter("amplifier")));
+        MythicLib.applyOn(target, () -> target.addPotionEffect(
+                new PotionEffect(PotionEffectType.WITHER, (int) (skillMeta.getParameter("duration") * 20), (int) skillMeta.getParameter("amplifier"))));
     }
 
     private void playParticleEffect(Location loc) {

@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.script.mechanic.offense;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.script.mechanic.MechanicMetadata;
 import io.lumine.mythic.lib.script.mechanic.type.TargetMechanic;
 import io.lumine.mythic.lib.script.util.Parsers;
@@ -33,6 +34,6 @@ public class PotionMechanic extends TargetMechanic {
     public void cast(SkillMetadata meta, Entity target) {
         Validate.isTrue(target instanceof LivingEntity, "Cannot add a potion effect to a non living entity");
 
-        ((LivingEntity) target).addPotionEffect(new PotionEffect(effect, (int) duration.evaluate(meta), (int) level.evaluate(meta), ambient, particles, icon));
+        MythicLib.applyOn(target, () -> ((LivingEntity) target).addPotionEffect(new PotionEffect(effect, (int) duration.evaluate(meta), (int) level.evaluate(meta), ambient, particles, icon)));
     }
 }

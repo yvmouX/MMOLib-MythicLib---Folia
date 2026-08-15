@@ -47,22 +47,26 @@ public class ShootArrowMechanic extends DirectionMechanic {
 
     @Override
     public void cast(SkillMetadata meta, Location source, Vector dir) {
-        final var arrow = meta.getCaster().getPlayer().launchProjectile(Arrow.class);
-        arrow.setVelocity(dir.multiply(velocity.evaluate(meta)));
+        // launchProjectile mutates the caster's entity state: it must run on
+        // the caster's own region thread on Folia
+        MythicLib.applyOn(meta.getCaster().getPlayer(), () -> {
+            final var arrow = meta.getCaster().getPlayer().launchProjectile(Arrow.class);
+            arrow.setVelocity(dir.multiply(velocity.evaluate(meta)));
 
-        // Trigger on-shoot abilities
-        meta.getCaster().getData().triggerSkills(new TriggerMetadata(meta.getCaster(), TriggerType.SHOOT_BOW, arrow, null));
+            // Trigger on-shoot abilities
+            meta.getCaster().getData().triggerSkills(new TriggerMetadata(meta.getCaster(), TriggerType.SHOOT_BOW, arrow, null));
 
-        final var damageTypes = this.damageTypes != null ? this.damageTypes : MythicLib.plugin.getMMOConfig().bowAttackTypes;
-        final var proj = ProjectileMetadata.create(meta.getCaster(), damageTypes, ProjectileType.ARROW, arrow);
-        if (fromItem)
-            proj.setSourceItem(NBTItem.get(meta.getCaster().getPlayer().getInventory().getItem(meta.getCaster().getActionHand().toBukkit())));
-        if (playerAttackDamage) proj.setCustomDamage(true);
+            final var damageTypes = this.damageTypes != null ? this.damageTypes : MythicLib.plugin.getMMOConfig().bowAttackTypes;
+            final var proj = ProjectileMetadata.create(meta.getCaster(), damageTypes, ProjectileType.ARROW, arrow);
+            if (fromItem)
+                proj.setSourceItem(NBTItem.get(meta.getCaster().getPlayer().getInventory().getItem(meta.getCaster().getActionHand().toBukkit())));
+            if (playerAttackDamage) proj.setCustomDamage(true);
 
-        // Register skills
-        if (onHit != null) proj.getEffectiveSkills().add(skill(onHit, TriggerType.ARROW_HIT));
-        if (onLand != null) proj.getEffectiveSkills().add(skill(onLand, TriggerType.ARROW_LAND));
-        if (onTick != null) proj.getEffectiveSkills().add(skill(onTick, TriggerType.ARROW_TICK));
+            // Register skills
+            if (onHit != null) proj.getEffectiveSkills().add(skill(onHit, TriggerType.ARROW_HIT));
+            if (onLand != null) proj.getEffectiveSkills().add(skill(onLand, TriggerType.ARROW_LAND));
+            if (onTick != null) proj.getEffectiveSkills().add(skill(onTick, TriggerType.ARROW_TICK));
+        });
     }
 
     private static final String PASSIVE_SKILL_KEY = "ml_shoot_arrow_mechanic";

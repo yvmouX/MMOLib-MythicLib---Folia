@@ -64,6 +64,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.ServicePriority;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -394,6 +396,41 @@ public class MythicLib extends MMOPlugin {
     public static void teleport(@NotNull Entity entity, @NotNull Location location) {
         if (getScheduler().isFolia()) getScheduler().teleportAsync(entity, location);
         else entity.teleport(location);
+    }
+
+    /**
+     * Executes an action which mutates entity state (potion effects, velocity,
+     * health, damage...) on the entity's own region thread on Folia. Runs
+     * instantly on Spigot/Paper.
+     */
+    public static void applyOn(@NotNull Entity entity, @NotNull Runnable action) {
+        if (getScheduler().isFolia()) getScheduler().runTask(entity, action);
+        else action.run();
+    }
+
+    /**
+     * Executes an action which mutates world state (block changes, entity
+     * spawns...) on the region thread owning that location on Folia. Runs
+     * instantly on Spigot/Paper.
+     */
+    public static void applyOnLocation(@NotNull Location location, @NotNull Runnable action) {
+        if (getScheduler().isFolia()) getScheduler().runTask(location, action);
+        else action.run();
+    }
+
+    /**
+     * Executes an action which mutates inventory state on the inventory
+     * holder's thread (Folia); runs instantly on Spigot/Paper.
+     */
+    public static void applyOnInventory(@NotNull Inventory inventory, @NotNull Runnable action) {
+        final InventoryHolder holder = inventory.getHolder();
+        if (holder instanceof Entity) applyOn((Entity) holder, action);
+        else {
+            final Location location = inventory.getLocation();
+            if (location != null) applyOnLocation(location, action);
+            else if (getScheduler().isFolia()) getScheduler().runTask(MythicLib.plugin, action);
+            else action.run();
+        }
     }
 
     public Gson getGson() {

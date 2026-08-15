@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.skill.handler.def.target;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -63,7 +65,7 @@ public class Targeted_Fireball extends SkillHandler<TargetSkillResult> {
                     loc.getWorld().spawnParticle(Particle.LAVA, loc, 8);
                     loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);
                     loc.getWorld().playSound(loc, Sounds.ENTITY_BLAZE_HURT, 2, 1);
-                    target.setFireTicks((int) (target.getFireTicks() + skillMeta.getParameter("ignite") * 20));
+                    MythicLib.applyOn(target, () -> target.setFireTicks((int) (target.getFireTicks() + skillMeta.getParameter("ignite") * 20)));
                     skillMeta.getCaster().attack(target, skillMeta.getParameter("damage"), damageTypes);
                     handler.close();
                 }

@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.target;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -42,6 +43,6 @@ public class Blind extends SkillHandler<TargetSkillResult> {
                         caster.getLocation().getDirection());
                 loc.getWorld().spawnParticle(VParticle.REDSTONE.get(), loc.add(vec), 1, new Particle.DustOptions(Color.BLACK, 1));
             }
-        target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (skillMeta.getParameter("duration") * 20), 0));
+        MythicLib.applyOn(target, () -> target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (skillMeta.getParameter("duration") * 20), 0)));
     }
 }

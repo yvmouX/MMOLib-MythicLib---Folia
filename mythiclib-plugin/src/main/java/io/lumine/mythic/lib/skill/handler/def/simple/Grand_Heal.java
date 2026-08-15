@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.simple;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.comp.interaction.InteractionType;
 import io.lumine.mythic.lib.player.resource.Resources;
@@ -40,6 +41,6 @@ public class Grand_Heal extends SkillHandler<SimpleSkillResult> {
         caster.getWorld().spawnParticle(VParticle.HAPPY_VILLAGER.get(), caster.getLocation().add(0, .75, 0), 16, 1, 1, 1, 0);
         for (Entity entity : caster.getNearbyEntities(radius, radius, radius))
             if (UtilityMethods.canTarget(caster, entity, InteractionType.SUPPORT_SKILL))
-                Resources.heal((LivingEntity) entity, heal);
+                MythicLib.applyOn(entity, () -> Resources.heal((LivingEntity) entity, heal));
     }
 }

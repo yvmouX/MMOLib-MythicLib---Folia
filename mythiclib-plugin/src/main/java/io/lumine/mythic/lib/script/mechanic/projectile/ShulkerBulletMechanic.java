@@ -32,9 +32,11 @@ public class ShulkerBulletMechanic extends DirectionMechanic {
     public void cast(SkillMetadata meta, Location source, Vector dir) {
         final long lifespan = (long) this.lifeSpan.evaluate(meta);
         Validate.isTrue(lifespan > 0, "Life spawn must be strictly positive");
-        final ShulkerBullet shulkerBullet = (ShulkerBullet) source.getWorld().spawnEntity(source, EntityType.SHULKER_BULLET);
-        shulkerBullet.setShooter(meta.getCaster().getPlayer());
-        new Handler(shulkerBullet, meta, dir).closeAfter(lifespan);
+        MythicLib.applyOnLocation(source, () -> {
+            final ShulkerBullet shulkerBullet = (ShulkerBullet) source.getWorld().spawnEntity(source, EntityType.SHULKER_BULLET);
+            shulkerBullet.setShooter(meta.getCaster().getPlayer());
+            new Handler(shulkerBullet, meta, dir).closeAfter(lifespan);
+        });
     }
 
     class Handler extends TemporaryHandler {
@@ -65,7 +67,7 @@ public class ShulkerBulletMechanic extends DirectionMechanic {
 
         @Override
         protected void onClose() {
-            if (!bullet.isDead()) bullet.remove();
+            if (!bullet.isDead()) MythicLib.applyOn(bullet, bullet::remove);
         }
 
         @EventHandler

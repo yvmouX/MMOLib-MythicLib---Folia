@@ -219,7 +219,7 @@ public abstract class GeneratedInventory extends PluginInventory {
         MythicLib.getScheduler().runAsync(MythicLib.plugin, () -> {
             if (lastOpened == null) return;
             update.accept(placed);
-            lastOpened.setItem(item.getSlots().get(n), placed);
+            MythicLib.applyOnInventory(lastOpened, () -> lastOpened.setItem(item.getSlots().get(n), placed));
         });
     }
 
@@ -229,7 +229,7 @@ public abstract class GeneratedInventory extends PluginInventory {
         MythicLib.getScheduler().runAsync(MythicLib.plugin, () -> {
             if (lastOpened == null) return;
             final var placed = ((InventoryItem) item).getDisplayedItem(this, n);
-            lastOpened.setItem(item.getSlots().get(n), placed);
+            MythicLib.applyOnInventory(lastOpened, () -> lastOpened.setItem(item.getSlots().get(n), placed));
         });
     }
 
@@ -238,7 +238,7 @@ public abstract class GeneratedInventory extends PluginInventory {
         future.thenAccept(t -> {
             if (lastOpened == null) return;
             update.accept(t, placed);
-            lastOpened.setItem(item.getSlots().get(n), placed);
+            MythicLib.applyOnInventory(lastOpened, () -> lastOpened.setItem(item.getSlots().get(n), placed));
         });
     }
 }

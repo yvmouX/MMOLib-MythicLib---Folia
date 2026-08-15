@@ -36,7 +36,7 @@ public class Burn extends SkillHandler<TargetSkillResult> {
          * value. For players it returns -20 which reduce the apparent
          * skill duration by one second, hence Math#max(...)
          */
-        target.setFireTicks((int) (Math.max(0, target.getFireTicks()) + skillMeta.getParameter("duration") * 20));
+        MythicLib.applyOn(target, () -> target.setFireTicks((int) (Math.max(0, target.getFireTicks()) + skillMeta.getParameter("duration") * 20)));
     }
 
     private void playParticleEffect(Location loc) {

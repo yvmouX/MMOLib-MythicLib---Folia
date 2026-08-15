@@ -46,7 +46,7 @@ public class Shadow_Veil extends SkillHandler<SimpleSkillResult> {
         // Clears the target of any entity around the player
         for (Mob serverEntities : caster.getWorld().getEntitiesByClass(Mob.class))
             if (serverEntities.getTarget() != null && serverEntities.getTarget().equals(caster))
-                serverEntities.setTarget(null);
+                MythicLib.applyOn(serverEntities, () -> serverEntities.setTarget(null));
 
         new ShadowVeilEffect(skillMeta.getCaster(), duration, (int) skillMeta.getParameter("deception"));
     }

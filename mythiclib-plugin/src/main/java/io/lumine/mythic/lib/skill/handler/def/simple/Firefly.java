@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.simple;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -70,7 +71,8 @@ public class Firefly extends SkillHandler<SimpleSkillResult> {
                         caster.getWorld().spawnParticle(Particle.LAVA, caster.getLocation().add(0, 1, 0), 32);
                         caster.getWorld().spawnParticle(VParticle.LARGE_SMOKE.get(), caster.getLocation().add(0, 1, 0), 24, 0, 0, 0, .3);
                         caster.getWorld().spawnParticle(Particle.FLAME, caster.getLocation().add(0, 1, 0), 24, 0, 0, 0, .3);
-                        entity.setVelocity(caster.getVelocity().setY(0.3).multiply(1.7 * knockback));
+                        final Vector knockbackVelocity = caster.getVelocity().setY(0.3).multiply(1.7 * knockback);
+                        MythicLib.applyOn(entity, () -> entity.setVelocity(knockbackVelocity));
                         caster.setVelocity(caster.getEyeLocation().getDirection().multiply(-3).setY(.5));
                         skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
                         handler.close();

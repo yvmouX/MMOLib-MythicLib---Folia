@@ -33,14 +33,15 @@ public abstract class Hologram {
 
                 // Remove hologram when reaching end of life
                 if (ticks++ * settings.tickPeriod >= settings.lifespan) {
-                    despawn();
+                    MythicLib.applyOnLocation(loc, Hologram.this::despawn);
                     cancel();
                     return;
                 }
 
                 v += acc * DT;
                 loc.add(dir.getX() * DT, v * DT, dir.getZ() * DT);
-                updateLocation(loc);
+                final Location tickLoc = loc.clone();
+                MythicLib.applyOnLocation(tickLoc, () -> updateLocation(tickLoc));
             }
         }.runTimer(MythicLib.plugin, 0, settings.tickPeriod);
     }

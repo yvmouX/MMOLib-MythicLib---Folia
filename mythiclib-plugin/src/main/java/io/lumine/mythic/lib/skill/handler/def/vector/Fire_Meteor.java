@@ -1,5 +1,7 @@
 package io.lumine.mythic.lib.skill.handler.def.vector;
 
+
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -68,7 +70,8 @@ public class Fire_Meteor extends SkillHandler<VectorSkillResult> {
                     for (Entity entity : UtilityMethods.getNearbyChunkEntities(loc))
                         if (UtilityMethods.canTarget(caster, entity) && entity.getLocation().distanceSquared(loc) < radius * radius) {
                             skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
-                            entity.setVelocity(entity.getLocation().toVector().subtract(loc.toVector()).multiply(.1 * knockback).setY(.4 * knockback));
+                            final Vector knockbackVelocity = entity.getLocation().toVector().subtract(loc.toVector()).multiply(.1 * knockback).setY(.4 * knockback);
+                            MythicLib.applyOn(entity, () -> entity.setVelocity(knockbackVelocity));
                         }
 
                     handler.close();

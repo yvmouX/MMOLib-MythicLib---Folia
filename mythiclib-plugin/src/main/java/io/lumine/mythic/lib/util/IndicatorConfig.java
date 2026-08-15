@@ -82,7 +82,7 @@ public class IndicatorConfig {
 
         // No movement
         if (!move)
-            MythicLib.getScheduler().runLater(MythicLib.plugin, holo::despawn, lifespan);
+            MythicLib.getScheduler().runLater(MythicLib.plugin, () -> MythicLib.applyOnLocation(holo.getLocation(), holo::despawn), lifespan);
         else holo.flyOut(this, dir);
     }
 }

@@ -58,41 +58,43 @@ public class Present_Throw extends SkillHandler<SimpleSkillResult> {
 
         Player caster = skillMeta.getCaster().getPlayer();
 
-        final NoClipItem item = new NoClipItem(caster.getLocation().add(0, 1.2, 0), PRESENT_ITEMSTACK);
-        item.getEntity().setVelocity(caster.getEyeLocation().getDirection().multiply(1.5 * skillMeta.getParameter("force")));
+        MythicLib.applyOnLocation(caster.getLocation(), () -> {
+            final NoClipItem item = new NoClipItem(caster.getLocation().add(0, 1.2, 0), PRESENT_ITEMSTACK);
+            item.getEntity().setVelocity(caster.getEyeLocation().getDirection().multiply(1.5 * skillMeta.getParameter("force")));
 
-        /*
-         * when items are moving through the air, they loose a percent of their
-         * velocity proportionally to their coordinates in each axis. this means
-         * that if the trajectory is not affected, the ratio of x/y will always
-         * be the same. check for any change of that ratio to check for a
-         * trajectory change
-         */
-        final double trajRatio = item.getEntity().getVelocity().getX() / item.getEntity().getVelocity().getZ();
-        caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_SNOWBALL_THROW, 1, 0);
+            /*
+             * when items are moving through the air, they loose a percent of their
+             * velocity proportionally to their coordinates in each axis. this means
+             * that if the trajectory is not affected, the ratio of x/y will always
+             * be the same. check for any change of that ratio to check for a
+             * trajectory change
+             */
+            final double trajRatio = item.getEntity().getVelocity().getX() / item.getEntity().getVelocity().getZ();
 
-        TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
-            int ti = 0;
+            TemporaryHandler.timerTask(skillMeta.getCaster().getData(), 1, handler -> new UniversalRunnable() {
+                int ti = 0;
 
-            public void run() {
-                if (ti++ > 70 || item.getEntity().isDead()) {
-                    item.close();
-                    handler.close();
-                    return;
+                public void run() {
+                    if (ti++ > 70 || item.getEntity().isDead()) {
+                        MythicLib.applyOn(item.getEntity(), item::close);
+                        handler.close();
+                        return;
+                    }
+
+                    double currentTrajRatio = item.getEntity().getVelocity().getX() / item.getEntity().getVelocity().getZ();
+                    VParticle.INSTANT_EFFECT.spawnSafeSpell(item.getEntity().getLocation().add(0, .1, 0));
+                    if (item.getEntity().isOnGround() || Math.abs(trajRatio - currentTrajRatio) > .1) {
+                        item.getEntity().getWorld().spawnParticle(VParticle.FIREWORK.get(), item.getEntity().getLocation().add(0, .1, 0), 128, 0, 0, 0, .25);
+                        item.getEntity().getWorld().playSound(item.getEntity().getLocation(), Sounds.ENTITY_FIREWORK_ROCKET_TWINKLE, 2, 1.5f);
+                        for (Entity entity : UtilityMethods.getNearbyChunkEntities(item.getEntity().getLocation()))
+                            if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && UtilityMethods.canTarget(caster, entity))
+                                skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
+                        MythicLib.applyOn(item.getEntity(), item::close);
+                        handler.close();
+                    }
                 }
-
-                double currentTrajRatio = item.getEntity().getVelocity().getX() / item.getEntity().getVelocity().getZ();
-                VParticle.INSTANT_EFFECT.spawnSafeSpell(item.getEntity().getLocation().add(0, .1, 0));
-                if (item.getEntity().isOnGround() || Math.abs(trajRatio - currentTrajRatio) > .1) {
-                    item.getEntity().getWorld().spawnParticle(VParticle.FIREWORK.get(), item.getEntity().getLocation().add(0, .1, 0), 128, 0, 0, 0, .25);
-                    item.getEntity().getWorld().playSound(item.getEntity().getLocation(), Sounds.ENTITY_FIREWORK_ROCKET_TWINKLE, 2, 1.5f);
-                    for (Entity entity : UtilityMethods.getNearbyChunkEntities(item.getEntity().getLocation()))
-                        if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && UtilityMethods.canTarget(caster, entity))
-                            skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
-                    item.close();
-                    handler.close();
-                }
-            }
+            });
         });
+        caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_SNOWBALL_THROW, 1, 0);
     }
 }

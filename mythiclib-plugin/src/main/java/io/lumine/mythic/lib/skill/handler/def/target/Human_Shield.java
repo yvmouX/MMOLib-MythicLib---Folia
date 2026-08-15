@@ -88,9 +88,9 @@ public class Human_Shield extends SkillHandler<TargetSkillResult> {
 
                 double health = caster.getPlayer().getHealth() - initialDamage * redirectRate;
                 if (health > caster.getPlayer().getAttribute(Attributes.MAX_HEALTH).getValue() * minimumHealthPercentage)
-                    caster.getPlayer().setHealth(health);
+                    MythicLib.applyOn(caster.getPlayer(), () -> caster.getPlayer().setHealth(health));
                 else {
-                    caster.getPlayer().setHealth(1);
+                    MythicLib.applyOn(caster.getPlayer(), () -> caster.getPlayer().setHealth(1));
                     close();
                 }
             }

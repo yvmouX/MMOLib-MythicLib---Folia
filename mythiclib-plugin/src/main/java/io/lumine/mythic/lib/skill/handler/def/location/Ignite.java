@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.location;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -41,6 +42,6 @@ public class Ignite extends SkillHandler<LocationSkillResult> {
 
         for (Entity entity : UtilityMethods.getNearbyChunkEntities(loc))
             if (entity.getLocation().distanceSquared(loc) < radiusSquared && UtilityMethods.canTarget(caster, entity))
-                entity.setFireTicks(Math.min(entity.getFireTicks() + ignite, maxIgnite));
+                MythicLib.applyOn(entity, () -> entity.setFireTicks(Math.min(entity.getFireTicks() + ignite, maxIgnite)));
     }
 }

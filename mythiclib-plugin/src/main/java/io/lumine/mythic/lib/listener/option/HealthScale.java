@@ -67,7 +67,7 @@ public void onEnable() {
 @EventHandler
 private void onJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
-    MythicLib.getScheduler().runLater(MythicLib.plugin, () -> {
+    MythicLib.getScheduler().runLater(player, () -> {
         player.setHealthScaled(true);
         player.setHealthScale(scale);
     }, delay);

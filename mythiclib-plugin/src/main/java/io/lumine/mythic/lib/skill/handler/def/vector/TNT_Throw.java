@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.vector;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -34,10 +35,12 @@ public class TNT_Throw extends SkillHandler<VectorSkillResult> {
         Player caster = skillMeta.getCaster().getPlayer();
 
         Vector vec = result.getTarget().multiply(2 * skillMeta.getParameter("force"));
-        TNTPrimed tnt = caster.getWorld().spawn(caster.getLocation().add(0, 1, 0), TNTPrimed.class);
-        tnt.setFuseTicks(80);
-        tnt.setVelocity(vec);
-        new Handler(skillMeta.getCaster().getData(), tnt);
+        MythicLib.applyOnLocation(caster.getLocation(), () -> {
+            TNTPrimed tnt = caster.getWorld().spawn(caster.getLocation().add(0, 1, 0), TNTPrimed.class);
+            tnt.setFuseTicks(80);
+            tnt.setVelocity(vec);
+            new Handler(skillMeta.getCaster().getData(), tnt);
+        });
         caster.getWorld().playSound(caster.getLocation(), Sounds.ENTITY_SNOWBALL_THROW, 1, 0);
         caster.getWorld().spawnParticle(VParticle.EXPLOSION.get(), caster.getLocation().add(0, 1, 0), 12, 0, 0, 0, .1);
     }

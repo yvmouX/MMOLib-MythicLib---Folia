@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.simple;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -52,7 +53,7 @@ public class Sky_Smash extends SkillHandler<SimpleSkillResult> {
                 skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
                 Location loc1 = caster.getEyeLocation().clone();
                 loc1.setPitch(-70);
-                entity.setVelocity(loc1.getDirection().multiply(1.2 * knockUp));
+                MythicLib.applyOn(entity, () -> entity.setVelocity(loc1.getDirection().multiply(1.2 * knockUp)));
             }
     }
 }

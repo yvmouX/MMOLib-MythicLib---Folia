@@ -77,7 +77,7 @@ public class Cursed_Beam extends SkillHandler<VectorSkillResult> {
                             for (Entity entity : entities)
                                 if (UtilityMethods.canTarget(caster, entity) && loc.distanceSquared(entity.getLocation().add(0, 1, 0)) < 9) {
                                     skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
-                                    ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (duration * 20), 0));
+                                    MythicLib.applyOn(entity, () -> ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (duration * 20), 0)));
                                 }
 
                             handler.close();

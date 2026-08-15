@@ -124,9 +124,23 @@ public class DamageManager extends Module {
     public boolean registerAttack(@NotNull AttackMetadata attack, boolean knockback, boolean ignoreImmunity) {
         Validate.notNull(attack.getTarget(), "Target cannot be null"); // BW compatibility check
 
+        final LivingEntity target = attack.getTarget();
+        final LivingEntity damager = attack.getAttacker() != null ? attack.getAttacker().getEntity() : null;
+
         markAsMetadata(attack);
-        var result = applyDamage(attack.getDamage().getDamage(), attack.getTarget(), attack.getAttacker() != null ? attack.getAttacker().getEntity() : null, knockback, ignoreImmunity);
-        unmarkAsMetadata(attack.getTarget());
+
+        // On Folia, entity state may only be mutated on the target's own region
+        // thread, so the damage is applied on the target's entity scheduler.
+        if (MythicLib.getScheduler().isFolia()) {
+            MythicLib.getScheduler().runTask(target, () -> {
+                applyDamage(attack.getDamage().getDamage(), target, damager, knockback, ignoreImmunity);
+                unmarkAsMetadata(target);
+            });
+            return true;
+        }
+
+        var result = applyDamage(attack.getDamage().getDamage(), target, damager, knockback, ignoreImmunity);
+        unmarkAsMetadata(target);
         return result;
     }
 

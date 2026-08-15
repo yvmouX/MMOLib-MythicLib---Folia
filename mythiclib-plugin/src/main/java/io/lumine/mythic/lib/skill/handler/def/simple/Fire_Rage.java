@@ -139,7 +139,7 @@ public class Fire_Rage extends SkillHandler<SimpleSkillResult> {
                             loc.getWorld().spawnParticle(Particle.LAVA, loc, 8);
                             loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);
                             loc.getWorld().playSound(loc, Sounds.ENTITY_BLAZE_HURT, 2, 1);
-                            target.setFireTicks(target.getFireTicks() + ignite);
+                            MythicLib.applyOn(target, () -> target.setFireTicks(target.getFireTicks() + ignite));
                             caster.attack((LivingEntity) target, damage, damageTypes);
                             handler.close();
                         }

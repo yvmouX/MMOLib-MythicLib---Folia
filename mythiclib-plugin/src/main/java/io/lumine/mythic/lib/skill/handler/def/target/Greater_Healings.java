@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.target;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.comp.interaction.InteractionType;
 import io.lumine.mythic.lib.player.resource.Resources;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -28,7 +29,7 @@ public class Greater_Healings extends SkillHandler<TargetSkillResult> {
     public void whenCast(TargetSkillResult result, SkillMetadata skillMeta) {
         LivingEntity target = result.getTarget();
         assert target != null;
-        Resources.heal(target, skillMeta.getParameter("heal"));
+        MythicLib.applyOn(target, () -> Resources.heal(target, skillMeta.getParameter("heal")));
         new SmallParticleEffect(target, Particle.HEART, 1);
         target.getWorld().playSound(target.getLocation(), Sounds.ENTITY_PLAYER_LEVELUP, 2, 2);
     }

@@ -42,27 +42,30 @@ public class Explosive_Turkey extends SkillHandler<VectorSkillResult> {
         Player caster = skillMeta.getCaster().getPlayer();
 
         final var vec = result.getTarget().normalize().multiply(.6);
-        final var chicken = (Chicken) caster.getWorld().spawnEntity(caster.getLocation().add(0, 1.3, 0).add(vec), EntityType.CHICKEN);
-        chicken.setInvulnerable(true);
-        chicken.setSilent(true);
-        new Handler(chicken, vec, skillMeta);
+        MythicLib.applyOnLocation(caster.getLocation(), () -> {
+            final var chicken = (Chicken) caster.getWorld().spawnEntity(caster.getLocation().add(0, 1.3, 0).add(vec), EntityType.CHICKEN);
+            chicken.setInvulnerable(true);
+            chicken.setSilent(true);
 
-        /*
-         * Sets the health to 2048 (Default max Spigot value) which stops the
-         * bug where you can kill the chicken for a brief few ticks after it
-         * spawns in!
-         */
-        chicken.getAttribute(Attributes.MAX_HEALTH).setBaseValue(2048);
-        chicken.setHealth(2048);
+            /*
+             * Sets the health to 2048 (Default max Spigot value) which stops the
+             * bug where you can kill the chicken for a brief few ticks after it
+             * spawns in!
+             */
+            chicken.getAttribute(Attributes.MAX_HEALTH).setBaseValue(2048);
+            chicken.setHealth(2048);
 
-        /*
-         * When items are moving through the air, they loose a percent of their
-         * velocity proportionally to their coordinates in each axis. This means
-         * that if the trajectory is not affected, the ratio of x/y will always
-         * be the same. Check for any change of that ratio to check for a
-         * trajectory change
-         */
-        chicken.setVelocity(vec);
+            /*
+             * When items are moving through the air, they loose a percent of their
+             * velocity proportionally to their coordinates in each axis. This means
+             * that if the trajectory is not affected, the ratio of x/y will always
+             * be the same. Check for any change of that ratio to check for a
+             * trajectory change
+             */
+            chicken.setVelocity(vec);
+
+            new Handler(chicken, vec, skillMeta);
+        });
     }
 
     /**
@@ -119,8 +122,9 @@ public class Explosive_Turkey extends SkillHandler<VectorSkillResult> {
                             if (!entity.isDead() && entity.getLocation().distanceSquared(chicken.getLocation()) < radiusSquared
                                     && UtilityMethods.canTarget(caster.getPlayer(), entity)) {
                                 caster.attack((LivingEntity) entity, damage, damageTypes);
-                                entity.setVelocity(entity.getLocation().toVector().subtract(chicken.getLocation().toVector()).multiply(.1 * knockback)
-                                        .setY(.4 * knockback));
+                                final Vector knockbackVelocity = entity.getLocation().toVector().subtract(chicken.getLocation().toVector()).multiply(.1 * knockback)
+                                        .setY(.4 * knockback);
+                                MythicLib.applyOn(entity, () -> entity.setVelocity(knockbackVelocity));
                             }
                     }
                 }
@@ -129,7 +133,7 @@ public class Explosive_Turkey extends SkillHandler<VectorSkillResult> {
 
         @Override
         public void onClose() {
-            chicken.remove();
+            if (!chicken.isDead()) MythicLib.applyOn(chicken, chicken::remove);
         }
 
         @EventHandler

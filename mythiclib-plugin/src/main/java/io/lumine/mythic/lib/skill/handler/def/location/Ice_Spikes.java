@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.location;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -69,7 +70,7 @@ public class Ice_Spikes extends SkillHandler<LocationSkillResult> {
                 for (Entity entity : UtilityMethods.getNearbyChunkEntities(loc1))
                     if (line.distanceSquared(entity.getLocation().toVector()) < RADIUS && Math.abs(entity.getLocation().getY() - loc1.getY()) < 10 && UtilityMethods.canTarget(caster, entity)) {
                         skillMeta.getCaster().attack((LivingEntity) entity, damage, damageTypes);
-                        ((LivingEntity) entity).addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), slow, 0));
+                        MythicLib.applyOn(entity, () -> ((LivingEntity) entity).addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), slow, 0)));
                     }
             }
         });

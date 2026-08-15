@@ -378,7 +378,7 @@ public class MythicCraftingManager implements Listener {
             mapping.applyToResultInventory(inven, new MythicRecipeInventory(), false);
         }
 
-        (new UniversalRunnable() {
+        final UniversalRunnable resultTick = new UniversalRunnable() {
             public void run() {
                 //RDR//log("\u00a78RDR \u00a746\u00a77 Tick waited, checking...");
                 //ISPM//for (int i = 0; i < inven.getSize(); i++) { MythicCraftingManager.log("\u00a78After Tick \u00a7d@" + i + " \u00a7f" + SilentNumbers.getItemName(inven.getItem(i))); }
@@ -390,7 +390,9 @@ public class MythicCraftingManager implements Listener {
 
                 //ISPM//for (int i = 0; i < inven.getSize(); i++) { MythicCraftingManager.log("\u00a78Post Display \u00a7c@" + i + " \u00a7f" + SilentNumbers.getItemName(inven.getItem(i))); }
             }
-        }).runLater(MythicLib.plugin, 1L);
+        };
+        // Inventory mutations must happen on the inventory holder's thread (Folia)
+        MythicLib.getScheduler().runLater(event.getWhoClicked(), resultTick, 1L);
 
 
         //ISPM//for (int i = 0; i < inven.getSize(); i++) { MythicCraftingManager.log("\u00a78Pre Tick \u00a73@" + i + " \u00a7f" + SilentNumbers.getItemName(inven.getItem(i))); }

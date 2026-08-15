@@ -1,5 +1,6 @@
 package io.lumine.mythic.lib.skill.handler.def.location;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.BuiltinSkillHandler;
@@ -41,9 +42,10 @@ public class Corrosion extends SkillHandler<LocationSkillResult> {
         loc.getWorld().playSound(loc, Sounds.BLOCK_BREWING_STAND_BREW, 2, 0);
 
         for (Entity entity : UtilityMethods.getNearbyChunkEntities(loc))
-            if (entity.getLocation().distanceSquared(loc) < radiusSquared && UtilityMethods.canTarget(caster, entity)) {
-                ((LivingEntity) entity).removePotionEffect(PotionEffectType.POISON);
-                ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
-            }
+            if (entity.getLocation().distanceSquared(loc) < radiusSquared && UtilityMethods.canTarget(caster, entity))
+                MythicLib.applyOn(entity, () -> {
+                    ((LivingEntity) entity).removePotionEffect(PotionEffectType.POISON);
+                    ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
+                });
     }
 }
