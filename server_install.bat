@@ -5,6 +5,9 @@ rem Windows script to build the plugin using Maven
 rem and automatically install the built JAR into the server
 rem ==========================================================
 
+rem Spigot 26.2 jars are compiled for Java 25, so JDK 25 is required
+set "JAVA_HOME=D:\dev\java\jdk-25"
+
 set "source_file=target\*.jar"
 
 rem Remove all existing jars in the target folder
