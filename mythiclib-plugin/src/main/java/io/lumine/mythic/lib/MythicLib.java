@@ -34,6 +34,7 @@ import io.lumine.mythic.lib.damage.mitigation.MitigationModule;
 import io.lumine.mythic.lib.damage.onhit.OnHitModule;
 import io.lumine.mythic.lib.glow.GlowModule;
 import io.lumine.mythic.lib.glow.provided.MythicGlowModule;
+import io.lumine.mythic.lib.glow.provided.NoGlowModule;
 import io.lumine.mythic.lib.gui.PluginInventory;
 import io.lumine.mythic.lib.hologram.HologramFactory;
 import io.lumine.mythic.lib.hologram.HologramFactoryList;
@@ -316,7 +317,16 @@ public class MythicLib extends MMOPlugin {
         // Glowing module
         if (glowModule == null) {
             glowModule = new MythicGlowModule();
-            glowModule.enable();
+            try {
+                glowModule.enable();
+            } catch (Exception | LinkageError throwable) {
+
+                // The glow module is based on scoreboard teams, which are not
+                // supported on Folia (registerNewTeam throws). Fall back to a
+                // no-op implementation instead of failing plugin startup.
+                glowModule = new NoGlowModule();
+                getLogger().log(Level.WARNING, "Glow effects are not supported on this server: " + throwable.getMessage());
+            }
         }
 
         BuiltinCommand.initializeAll(this, MythicLibCommands.class);
