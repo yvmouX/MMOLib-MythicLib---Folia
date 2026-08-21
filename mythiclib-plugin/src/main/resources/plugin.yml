@@ -6,7 +6,7 @@ version: ${project.version}
 description: ${project.description}
 website: www.phoenixdevt.fr
 # AuraSkills must be enabled before initializing API class
-softdepend: [ WorldGuard,Residence,MythicMobs,PlaceholderAPI,Fabled,AureliumSkills,AuraSkills ]
+softdepend: [ WorldGuard,Residence,MythicMobs,PlaceholderAPI,Fabled,AureliumSkills,AuraSkills,packetevents ]
 loadbefore: [ MMOProfiles, MMOCore ]
 folia-supported: true
 commands:
